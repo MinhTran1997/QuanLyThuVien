@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     8/2/2019 1:36:39 AM                          */
+/* Created on:     8/4/2019 5:59:15 PM                          */
 /*==============================================================*/
 
 
@@ -343,6 +343,7 @@ create table DOCGIA (
    DIACHIDG             nvarchar(50)         null,
    NGAYSINHDG           date                 null,
    GIOITINHDG           bit                  null,
+   HSDTHE               date                 null,
    USERNAME_DG          nvarchar(50)         null,
    PASSWORD_DG          nvarchar(50)         null,
    constraint PK_DOCGIA primary key nonclustered (ID_THEDG)
