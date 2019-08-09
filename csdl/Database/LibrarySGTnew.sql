@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     8/4/2019 5:59:15 PM                          */
+/* Created on:     8/9/2019 9:15:39 PM                          */
 /*==============================================================*/
 
 
@@ -300,9 +300,9 @@ go
 /* Table: DAUSACH                                               */
 /*==============================================================*/
 create table DAUSACH (
-   ID_ISBN              nchar(20)            not null,
-   ID_LOAISACH          int                  null,
-   ID_NXB               int                  null,
+   ID_ISBN              bigint               not null,
+   ID_LOAISACH          bigint               null,
+   ID_NXB               bigint               null,
    TENDS                nvarchar(50)         null,
    TOMLUOCNOIDUNG       nvarchar(300)        null,
    KHOSACH              nchar(20)            null,
@@ -336,7 +336,7 @@ go
 /* Table: DOCGIA                                                */
 /*==============================================================*/
 create table DOCGIA (
-   ID_THEDG             int                  not null,
+   ID_THEDG             bigint               not null,
    HOTENDG              nvarchar(50)         null,
    SDTDG                numeric(11)          null,
    EMAILDG              nvarchar(50)         null,
@@ -354,8 +354,8 @@ go
 /* Table: DS_TG                                                 */
 /*==============================================================*/
 create table DS_TG (
-   ID_ISBN              nchar(20)            not null,
-   ID_TACGIA            int                  not null,
+   ID_ISBN              bigint               not null,
+   ID_TACGIA            bigint               not null,
    constraint PK_DS_TG primary key (ID_ISBN, ID_TACGIA)
 )
 go
@@ -380,7 +380,7 @@ go
 /* Table: LOAISACH                                              */
 /*==============================================================*/
 create table LOAISACH (
-   ID_LOAISACH          int                  not null,
+   ID_LOAISACH          bigint               not null,
    TENLOAISACH          nvarchar(50)         null,
    constraint PK_LOAISACH primary key nonclustered (ID_LOAISACH)
 )
@@ -390,7 +390,7 @@ go
 /* Table: NXB                                                   */
 /*==============================================================*/
 create table NXB (
-   ID_NXB               int                  not null,
+   ID_NXB               bigint               not null,
    TENNXB               nvarchar(50)         null,
    DIACHINXB            nvarchar(50)         null,
    SDTNXB               numeric(11)          null,
@@ -403,9 +403,9 @@ go
 /* Table: PHIEUMUON                                             */
 /*==============================================================*/
 create table PHIEUMUON (
-   ID_PHIEUMUON         nchar(20)            not null,
-   ID_THUTHU            int                  null,
-   ID_THEDG             int                  null,
+   ID_PHIEUMUON         bigint               not null,
+   ID_THUTHU            bigint               null,
+   ID_THEDG             bigint               null,
    NGAYLAPPM            date                 null,
    constraint PK_PHIEUMUON primary key nonclustered (ID_PHIEUMUON)
 )
@@ -431,9 +431,9 @@ go
 /* Table: PHIEUTRA                                              */
 /*==============================================================*/
 create table PHIEUTRA (
-   ID_PHIEUTRA          nchar(20)            not null,
-   ID_THEDG             int                  null,
-   ID_THUTHU            int                  null,
+   ID_PHIEUTRA          bigint               not null,
+   ID_THEDG             bigint               null,
+   ID_THUTHU            bigint               null,
    NGAYLAPPT            date                 null,
    constraint PK_PHIEUTRA primary key nonclustered (ID_PHIEUTRA)
 )
@@ -459,8 +459,8 @@ go
 /* Table: PM_S                                                  */
 /*==============================================================*/
 create table PM_S (
-   ID_PHIEUMUON         nchar(20)            not null,
-   BARCODE              nchar(20)            not null,
+   ID_PHIEUMUON         bigint               not null,
+   BARCODE              bigint               not null,
    NGAYHUATRA           date                 null,
    constraint PK_PM_S primary key (ID_PHIEUMUON, BARCODE)
 )
@@ -486,8 +486,8 @@ go
 /* Table: PT_S                                                  */
 /*==============================================================*/
 create table PT_S (
-   ID_PHIEUTRA          nchar(20)            not null,
-   BARCODE              nchar(20)            not null,
+   ID_PHIEUTRA          bigint               not null,
+   BARCODE              bigint               not null,
    NGAYTRA              date                 null,
    constraint PK_PT_S primary key (ID_PHIEUTRA, BARCODE)
 )
@@ -513,8 +513,8 @@ go
 /* Table: SACH                                                  */
 /*==============================================================*/
 create table SACH (
-   BARCODE              nchar(20)            not null,
-   ID_ISBN              nchar(20)            null,
+   BARCODE              bigint               not null,
+   ID_ISBN              bigint               null,
    TRANGTHAI            bit                  null,
    constraint PK_SACH primary key nonclustered (BARCODE)
 )
@@ -532,7 +532,7 @@ go
 /* Table: TACGIA                                                */
 /*==============================================================*/
 create table TACGIA (
-   ID_TACGIA            int                  not null,
+   ID_TACGIA            bigint               not null,
    HOTENTG              nvarchar(50)         null,
    SDTTG                numeric(11)          null,
    EMAILTG              nvarchar(50)         null,
@@ -545,7 +545,7 @@ go
 /* Table: THUTHU                                                */
 /*==============================================================*/
 create table THUTHU (
-   ID_THUTHU            int                  not null,
+   ID_THUTHU            bigint               not null,
    HOTENTT              nvarchar(50)         null,
    SDTTT                numeric(11)          null,
    EMAILTT              nvarchar(50)         null,
