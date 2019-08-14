@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     8/9/2019 9:15:39 PM                          */
+/* Created on:     8/14/2019 9:17:30 AM                         */
 /*==============================================================*/
 
 
@@ -338,7 +338,7 @@ go
 create table DOCGIA (
    ID_THEDG             bigint               not null,
    HOTENDG              nvarchar(50)         null,
-   SDTDG                numeric(11)          null,
+   SDTDG                varchar(10)          null,
    EMAILDG              nvarchar(50)         null,
    DIACHIDG             nvarchar(50)         null,
    NGAYSINHDG           date                 null,
@@ -393,7 +393,7 @@ create table NXB (
    ID_NXB               bigint               not null,
    TENNXB               nvarchar(50)         null,
    DIACHINXB            nvarchar(50)         null,
-   SDTNXB               numeric(11)          null,
+   SDTNXB               varchar(10)          null,
    EMAILNXB             nvarchar(50)         null,
    constraint PK_NXB primary key nonclustered (ID_NXB)
 )
@@ -534,7 +534,7 @@ go
 create table TACGIA (
    ID_TACGIA            bigint               not null,
    HOTENTG              nvarchar(50)         null,
-   SDTTG                numeric(11)          null,
+   SDTTG                varchar(10)          null,
    EMAILTG              nvarchar(50)         null,
    TRINHDO              nvarchar(50)         null,
    constraint PK_TACGIA primary key nonclustered (ID_TACGIA)
@@ -547,7 +547,7 @@ go
 create table THUTHU (
    ID_THUTHU            bigint               not null,
    HOTENTT              nvarchar(50)         null,
-   SDTTT                numeric(11)          null,
+   SDTTT                varchar(10)          null,
    EMAILTT              nvarchar(50)         null,
    DIACHITT             nvarchar(50)         null,
    NGAYSINHTT           date                 null,
