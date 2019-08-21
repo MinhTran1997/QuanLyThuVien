@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
@@ -10,7 +9,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Quản Lý Đầu Sách</title>
+    <title>Quản Lí Thư Viện - admin</title>
 
     <!-- Fontfaces CSS-->
     <link href="css/font-face.css" rel="stylesheet" media="all">
@@ -33,99 +32,17 @@
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
 
+    <!--AngularJS-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <!-- <script type="lib/angular.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/dirPagination.js"></script>
 </head>
 
-<body class="animsition" ng-app="myApp" ng-controller="bookCtrl">
+<body class="animsition" ng-app="myApp">
     <div class="page-wrapper">
-        <!-- HEADER MOBILE-->
-        <header class="header-mobile d-block d-lg-none">
-            <div class="header-mobile__bar">
-                <div class="container-fluid">
-                    <div class="header-mobile-inner">
-                        <a class="logo" href="index.html">
-                            <h2>Admin | SaiGonTech</h2>
-                        </a>
-                        <button class="hamburger hamburger--slider" type="button">
-                            <span class="hamburger-box">
-                                <span class="hamburger-inner"></span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <nav class="navbar-mobile">
-                <div class="container-fluid">
-                    <ul class="navbar-mobile__list list-unstyled">
-                      <li>
-                            <a class="js-arrow" href="./index.html">
-                                <i class="fas fa-book"></i>Quản Lí Đầu Sách</a>
-                        </li>
-                        <li>
-                            <a href="chart.html">
-                                <i class="fas fa-minus-square"></i>Quản Lí Mượn</a>
-                        </li>
-                        <li>
-                            <a href="table.html">
-                                <i class="fas fa-plus-square"></i>Quản Lí Trả</a>
-                        </li>
-                        <li>
-                            <a href="form.html">
-                                <i class="fas fa-users"></i>Quản Lí Độc Giả</a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-calendar-alt"></i>Quản Lí Thể Loại</a>
-                        </li>
-                        <li>
-                            <a href="map.html">
-                                <i class="fas fa-map-marker-alt"></i>Bản Đồ</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-        <!-- END HEADER MOBILE-->
-
         <!-- MENU SIDEBAR-->
-        <aside class="menu-sidebar d-none d-lg-block">
-            <div class="logo">
-                <a href="#">
-                    <h4>SaiGonTech | Admin</h4>
-                </a>
-            </div>
-            <div class="menu-sidebar__content js-scrollbar1 bg">
-                <nav class="navbar-sidebar">
-                    <ul class="list-unstyled navbar__list">
-                        <li>
-                            <a class="js-arrow" href="./index.html">
-                                <i class="fas fa-book"></i>Quản Lí Đầu Sách</a>
-                        </li>
-                        <li>
-                            <a href="chart.html">
-                                <i class="fas fa-minus-square"></i>Quản Lí Mượn</a>
-                        </li>
-                        <li>
-                            <a href="table.html">
-                                <i class="fas fa-plus-square"></i>Quản Lí Trả</a>
-                        </li>
-                        <li>
-                            <a href="form.html">
-                                <i class="fas fa-users"></i>Quản Lí Độc Giả</a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="fas fa-calendar-alt"></i>Quản Lí Thể Loại</a>
-                        </li>
-                        <li>
-                            <a href="map.html">
-                                <i class="fas fa-map-marker-alt"></i>Bản Đồ</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
+        <aside ng-include="'aside.html'"></aside>
         <!-- END MENU SIDEBAR-->
 
         <!-- PAGE CONTAINER-->
@@ -136,13 +53,12 @@
                     <div class="container-fluid">
                         <div class="header-wrap">
                             <form class="form-header" action="" method="POST">
-                                <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
+                                <input class="au-input au-input--xl" type="search" name="search" placeholder="Search here..." ng-model="search"/>
                                 <button class="au-btn--submit" type="submit">
                                     <i class="zmdi zmdi-search"></i>
                                 </button>
                             </form>
                             <div class="header-button">
-
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
                                         <div class="image">
@@ -181,73 +97,11 @@
 
             <!-- MAIN CONTENT-->
             <div class="main-content bg-white">
-                <h3><i class="fas fa-book ml-2"></i> Quản Lí Đầu Sách </h3>
-                <hr>
-                <a href="./addbooks.html" class="btn btn-primary mb-4 ml-2"><i class="fas fa-plus ml-2"></i> Thêm</a>
-                <div class="table-responsive">
-                <table class="table table-striped table-bordered border-warning">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">ISBN</th>
-                      <th scope="col">Mã loại sách</th>
-                      <th scope="col">Mã nhà xuất bản</th>
-                      <th scope="col">Tên đầu sách</th>
-                      <th scope="col">Nội dung</th>
-                      <th scope="col">Khổ sách</th>
-                      <th scope="col">Số trang</th>
-                      <th scope="col">Đính kèm</th>
-                      <th scope="col">Vị trí</th>
-                      <th scope="col">Ngôn ngữ</th>
-                      <th scope="col">Phiên bản</th>
-                      <th scope="col">Năm xuất bản</th>
-                      <th colspan="3" scope="col"> Hành Động</th>
-                  </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="x in books">
-                  <th scope="row">1</th>
-                  <td>{{x.id_ISBN}}</td>
-                  <td>{{x.id_LoaiSach}}</td>
-                  <td>{{x.id_NXB}}</td>
-                  <td>{{x.tenDS}}</td>
-                  <td>{{x.tomLuocNoiDung}}</td>
-                  <td>{{x.khoSach}}</td>
-                  <td>{{x.soTrang}}</td>
-                  <td>{{x.dinhKem}}</td>
-                  <td>{{x.viTri}}</td>
-                  <td>{{x.ngonNgu}}</td>
-                  <td>{{x.phienBan}}</td>
-                  <td>{{x.namXuatBan}}</td>
-                  <td><a href="./detailbook.html" class="btn btn-primary"> Hiển thị</a></td>
-                  <td><a href="./editbooks.html"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></a></td>
-                      <td><a href="#" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i>
-                      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Cảnh Báo !</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                              </button>
-                          </div>
-                          <div class="modal-body">
-                            Bạn có muốn xóa
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div></a></td>
-          </table>
-      </div>
+              <ng-view></ng-view>
             </div>
             <!-- END MAIN CONTENT-->
             <!-- END PAGE CONTAINER-->
         </div>
-
     </div>
 
     <!-- Jquery JS-->
@@ -271,11 +125,8 @@
     <script src="vendor/select2/select2.min.js">
     </script>
 
-    <!-- Main JS-->
     <!--Javascript-->
-    <script src="js/script.js"></script>
     <script src="js/main.js"></script>
 </body>
-
 </html>
 <!-- end document-->

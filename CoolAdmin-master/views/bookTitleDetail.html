@@ -1,0 +1,19 @@
+<h3><i class="fas fa-book ml-2"></i>&nbsp;&nbsp;QUẢN LÍ ĐẦU SÁCH (CHI TIẾT)</h3>
+<hr>
+<div class="table-responsive">
+<h3 style="margin:1em 0"><i class="fas fa-book ml-2"></i>&nbsp;&nbsp;CÁC SÁCH ĐANG CÓ:</h3>
+<table class="table table-bordered border-warning text-center">
+  <thead>
+    <tr class="table-info">
+      <th>Barcode</th>
+      <th>Trạng thái</th>
+    </tr>
+  </thead>
+  <tbody ng-repeat="book in books | filter: search">
+    <tr>
+      <td>{{book.barcode}}</td>
+      <td>{{book.trangThai}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>

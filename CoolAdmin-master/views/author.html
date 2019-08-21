@@ -1,0 +1,61 @@
+<h3><i class="fas fa-book ml-2"></i> Quản Lí Tác Giả</h3>
+<hr>
+<button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createAuthor()">+ Thêm</button>
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">{{modalTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="id_TacGia" class="col-form-label">Mã tác giả:</label>
+            <input type="text" class="form-control" name="id_TacGia" id="id_TacGia" ng-model="id_TacGia" ng-disabled=disabled><br>
+
+            <label for="hoTenTG" class="col-form-label">Họ tên tác giả</label>
+            <input type="text" class="form-control" name="hoTenTG" id="hoTenTG" ng-model="hoTenTG"><br>
+
+            <label for="sdtTG" class="col-form-label">Số điện thoại:</label>
+            <input type="text" class="form-control" name="sdtTG" id="sdtTG" ng-model="sdtTG"><br>
+
+            <label for="emailTG" class="col-form-label">E-mail:</label>
+            <input type="text" class="form-control" name="emailTG" id="emailTG" ng-model="emailTG"><br>
+
+            <label for="trinhDo" class="col-form-label">Trình độ:</label>
+            <input type="text" class="form-control" name="trinhDo" id="trinhDo" ng-model="trinhDo"><br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addAuthor(id_TacGia, hoTenTG, sdtTG, emailTG, trinhDo)">LƯU</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updateAuthor(id_TacGia, hoTenTG, sdtTG, emailTG, trinhDo)">LƯU</button>
+          </div>
+        </div>
+      </div>
+  </div>
+<div class="table-responsive">
+<table class="table table-striped table-bordered border-warning">
+  <thead>
+    <tr class="table-info">
+      <th scope="col">Mã tác giả</th>
+      <th scope="col">Họ tên tác giả</th>
+      <th scope="col">Số điện thoại</th>
+      <th scope="col">E-mail</th>
+      <th scope="col">Trình độ</th>
+      <th colspan="3" scope="col"></th>
+  </tr>
+</thead>
+<tbody ng-repeat="x in authors | orderBy: 'id_TacGia' | filter: search">
+  <tr>
+    <td>{{x.id_TacGia}}</td>
+    <td>{{x.hoTenTG}}</td>
+    <td>{{x.sdtTG}}</td>
+    <td>{{x.emailTG}}</td>
+    <td>{{x.trinhDo}}</td>
+    <td class="text-center"><button data-toggle="modal" data-target="#addModal" ng-click="editAuthor(x)"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></button></td>
+    <td class="text-center"><button ng-confirm-click="Bạn muốn xóa tác giả {{x.id_TacGia}} ?" confirmed-click="deleteAuthor(x)"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i></button></td>
+  </tr>
+</tbody>
+</table>
+</div>

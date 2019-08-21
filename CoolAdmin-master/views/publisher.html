@@ -1,0 +1,61 @@
+<h3><i class="fas fa-book ml-2"></i> Quản Lí Nhà Xuất Bản</h3>
+<hr>
+<button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createPublisher()">+ Thêm</button>
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">{{modalTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="id_NXB" class="col-form-label">Mã nhà xuất bản:</label>
+            <input type="text" class="form-control" name="id_NXB" id="id_NXB" ng-model="id_NXB" ng-disabled=disabled><br>
+
+            <label for="tenNXB" class="col-form-label">Tên nhà xuất bản:</label>
+            <input type="text" class="form-control" name="tenNXB" id="tenNXB" ng-model="tenNXB"><br>
+
+            <label for="diaChiNXB" class="col-form-label">Địa chỉ:</label>
+            <input type="text" class="form-control" name="diaChiNXB" id="diaChiNXB" ng-model="diaChiNXB"><br>
+
+            <label for="sdtNXB" class="col-form-label">Số điện thoại:</label>
+            <input type="text" class="form-control" name="sdtNXB" id="sdtNXB" ng-model="sdtNXB"><br>
+
+            <label for="emailNXB" class="col-form-label">E-mail:</label>
+            <input type="text" class="form-control" name="emailNXB" id="emailNXB" ng-model="emailNXB"><br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addPublisher(id_NXB, tenNXB, diaChiNXB, sdtNXB, emailNXB)">LƯU</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updatePublisher(id_NXB, tenNXB, diaChiNXB, sdtNXB, emailNXB)">LƯU</button>
+          </div>
+        </div>
+      </div>
+  </div>
+<div class="table-responsive">
+<table class="table table-bordered border-warning">
+  <thead>
+    <tr class="table-info">
+      <th scope="col">Mã nhà xuất bản</th>
+      <th scope="col">Tên nhà xuất bản</th>
+      <th scope="col">Địa chỉ</th>
+      <th scope="col">Số điện thoại</th>
+      <th scope="col">E-mail</th>
+      <th colspan="3" scope="col"></th>
+  </tr>
+</thead>
+<tbody ng-repeat="x in publishers | orderBy: 'id_NXB' | filter: search">
+  <tr>
+    <td>{{x.id_NXB}}</td>
+    <td>{{x.tenNXB}}</td>
+    <td>{{x.diaChiNXB}}</td>
+    <td>{{x.sdtNXB}}</td>
+    <td>{{x.emailNXB}}</td>
+    <td class="text-center"><button data-toggle="modal" data-target="#addModal" ng-click="editPublisher(x)"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></button></td>
+    <td class="text-center"><button ng-confirm-click="Bạn muốn xóa nhà xuất bản {{x.id_NXB}} ?" confirmed-click="deletePublisher(x)"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i></button></td>
+  </tr>
+</tbody>
+</table>
+</div>
