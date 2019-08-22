@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import intake09.fm14.entity.BookTitle;
 import intake09.fm14.repository.BookTitleRepository;
 
@@ -24,6 +25,9 @@ public class BookTitleService {
     public BookTitle createBookTitle(BookTitle bookTitle) {
         return bookTitleRepo.save(bookTitle);
     }
+    
+    public List<BookTitle> findByNameContainingWorks(String name) { return
+    		bookTitleRepo.findByContainingName(name); }
     
     public BookTitle updateBookTitle(Long id_ISBN, BookTitle bookTitleEntity) {
     	BookTitle updatedSample;

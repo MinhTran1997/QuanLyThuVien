@@ -93,7 +93,7 @@ public class BookTitle {
 
 	//GETTER, SETTER
 	public Long getId_ISBN() {
-		return id_ISBN;
+		return id_ISBN+10000000;
 	}
 
 	public void setId_ISBN(Long id_ISBN) {
