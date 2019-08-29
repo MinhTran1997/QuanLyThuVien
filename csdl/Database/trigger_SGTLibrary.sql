@@ -37,12 +37,16 @@ go
 
 create trigger trigger_Xoa_PHIEUMUON on PHIEUMUON for delete as
 begin
-	DBCC CHECKIDENT ('PHIEUMUON', RESEED, 0)
+	declare @seed int
+	set @seed = (select count(*) from PHIEUMUON)
+	DBCC CHECKIDENT ('PHIEUMUON', RESEED, @seed)
 end
 
 go
 
 create trigger trigger_Xoa_PHIEUTRA on PHIEUTRA for delete as
 begin
-	DBCC CHECKIDENT ('PHIEUTRA', RESEED, 0)
+	declare @seed int
+	set @seed = (select count(*) from PHIEUTRA)
+	DBCC CHECKIDENT ('PHIEUTRA', RESEED, @seed)
 end
