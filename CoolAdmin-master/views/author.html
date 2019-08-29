@@ -1,4 +1,4 @@
-<h3><i class="fas fa-book ml-2"></i> Quản Lí Tác Giả</h3>
+<h3><i class="fas fa-book ml-2"></i> QUẢN LÍ TÁC GIẢ</h3>
 <hr>
 <button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createAuthor()">+ Thêm</button>
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -11,8 +11,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <label for="id_TacGia" class="col-form-label">Mã tác giả:</label>
-            <input type="text" class="form-control" name="id_TacGia" id="id_TacGia" ng-model="id_TacGia" ng-disabled=disabled><br>
+            <label for="id_TacGia" class="col-form-label" ng-if="modifying">Mã tác giả:</label>
+            <input type="number" class="form-control" ng-if="modifying" name="id_TacGia" id="id_TacGia" ng-model="id_TacGia" ng-disabled=disabled><br>
 
             <label for="hoTenTG" class="col-form-label">Họ tên tác giả</label>
             <input type="text" class="form-control" name="hoTenTG" id="hoTenTG" ng-model="hoTenTG"><br>

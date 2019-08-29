@@ -1,4 +1,4 @@
-<h3><i class="fas fa-book ml-2"></i> Quản Lí Đầu Sách</h3>
+<h3><i class="fas fa-book ml-2"></i> QUẢN LÍ SÁCH</h3>
 <hr>
 <button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createBookTitle()">+ Thêm</button>
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -15,15 +15,23 @@
             <input type="text" class="form-control" name="id_ISBN" id="id_ISBN" ng-model="id_ISBN" ng-disabled=disabled required><br>
 
             <label for="id_LoaiSach" class="col-form-label">Loại sách:</label>
-            <input type="text" class="form-control" name="id_LoaiSach" id="id_LoaiSach" ng-model="id_LoaiSach"><br>
+            <select class="form-control" name="id_LoaiSach" id="id_LoaiSach" ng-model="id_LoaiSach">
+              <option ng-repeat="subject in subjects | orderBy: 'tenLoaiSach'" value="{{subject.id_LoaiSach}}">{{subject.tenLoaiSach}}</option>
+            </select><br>
 
             <label for="id_NXB" class="col-form-label">Nhà xuất bản:</label>
             <select class="form-control" name="id_NXB" id="id_NXB" ng-model="id_NXB">
-              <option ng-repeat="publisher in publishers" value="{{publisher.id_NXB}}">{{publisher.tenNXB}}</option>
+              <option ng-repeat="publisher in publishers | orderBy: 'tenNXB'" value="{{publisher.id_NXB}}">{{publisher.tenNXB}}</option>
             </select><br>
 
             <label for="tenDS" class="col-form-label">Tên đầu sách:</label>
             <input type="text" class="form-control" name="tenDS" id="tenDS" ng-model="tenDS"><br>
+
+            <label for="tacGia" class="col-form-label">Tác giả</label>
+            <div class="row" style="margin: 0px 0px">
+            <input type="text" class="form-control col-sm-11" name="tacGia" id="tacGia" ng-model="tacGia">
+            <button type="button" class="btn btn-dark col-sm-1" name="button">+</button>
+            </div><br>
 
             <label for="tomLuocNoiDung" class="col-form-label">Nội dung:</label>
             <textarea name="name" rows="5" cols="80" class="form-control" name="tomLuocNoiDung" id="tomLuocNoiDung" ng-model="tomLuocNoiDung"></textarea><br>
@@ -49,13 +57,14 @@
             <label for="namXuatBan" class="col-form-label">Năm xuất bản:</label>
             <input type="date" class="form-control" name="namXuatBan" id="namXuatBan" ng-model="namXuatBan"/><br>
 
-            <label for="soLuong" class="col-form-label" ng-if="adding">Số lượng:</label>
-            <input type="number" class="form-control" name="soLuong" id="soLuong" ng-model="soLuong" ng-if="adding"/>
+            <img ng-src="../images/books/{{hinhAnh}}" style="width:100px;height:108px;" ng-model="hinhAnh"><br><br>
+            <input type="file" id="imgUpdate" name="imgUpdate">
+            <br>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
-            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addBookTitle(id_ISBN, id_LoaiSach, id_NXB, tenDS, tomLuocNoiDung, khoSach, soTrang, dinhKem, viTri, ngonNgu, phienBan, namXuatBan, soLuong)">LƯU</button>
-            <button type="submit" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updateBookTitle(id_ISBN, id_LoaiSach, id_NXB, tenDS, tomLuocNoiDung, khoSach, soTrang, dinhKem, viTri, ngonNgu, phienBan, namXuatBan)">LƯU</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addBookTitle(id_ISBN, id_LoaiSach, id_NXB, tenDS, tomLuocNoiDung, khoSach, soTrang, dinhKem, viTri, ngonNgu, phienBan, namXuatBan)">LƯU</button>
+            <button type="submit" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updateBookTitle(id_ISBN, id_LoaiSach, tenDS, tomLuocNoiDung, khoSach, soTrang, dinhKem, viTri, ngonNgu, phienBan, namXuatBan)">LƯU</button>
           </div>
         </div>
       </div>
@@ -64,6 +73,7 @@
 <table class="table table-bordered border-warning" id="accordion">
   <thead>
     <tr class="table-info">
+      <th>Hình ảnh</th>
       <th scope="col">ISBN</th>
       <th scope="col">Tên đầu sách</th>
       <th scope="col">Ngôn ngữ</th>
@@ -73,58 +83,66 @@
   </tr>
 </thead>
 <tbody ng-repeat="x in bookTitles | orderBy: 'id_ISBN' | filter: search">
-  <tr class="card-header" id="heading{{x.id_ISBN}}" data-toggle="collapse" data-target="#{{x.id_ISBN}}" aria-expanded="false" aria-controls="{{x.id_ISBN}}">
+  <tr class="card-header" id="heading" data-toggle="collapse" data-target="#{{x.id_ISBN}}" aria-expanded="true" aria-controls="{{x.id_ISBN}}">
+    <td style="width:6.25em;height:6.25em;"><img ng-src="../images/books/{{x.hinhAnh}}" style="width:6.25em;height:6.25em;"></td><!---->
     <td>{{x.id_ISBN}}</td>
     <td>{{x.tenDS}}</td>
     <td>{{x.ngonNgu}}</td>
     <td>{{x.phienBan}}</td>
     <td>{{x.namXuatBan | date:'dd-MM-yyyy'}}</td>
-    <td class="text-center"><a href="#!/bookTitleDetail/{{x.id_ISBN}}" class="btn btn-primary" ng-click="showDetail(x)">Chi tiết</a></td>
+    <td class="text-center"><a href="#!/bookTitleDetail/{{x.id_ISBN}}" class="btn btn-primary" ng-click="showDetail(x)">Xem</a></td>
     <td class="text-center"><button data-toggle="modal" data-target="#addModal" ng-click="editBookTitle(x)"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></button></td>
     <td class="text-center"><button ng-confirm-click="Bạn muốn xóa đầu sách {{x.id_ISBN}} ?" confirmed-click="deleteBookTitle(x)"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i></button></td>
   </tr>
-  <tr id="{{x.id_ISBN}}" class="collapse" aria-labelledby="heading{{x.id_ISBN}}" data-parent="#accordion">
-    <td colspan="8">
+  <tr id="{{x.id_ISBN}}" class="collapse" aria-labelledby="heading" data-parent="#accordion">
+    <td colspan="9">
       <table width="100%">
           <tr>
-            <th scope="col">ISBN</th>
-            <th scope="col">Loại sách</th>
-            <th scope="col">Nhà xuất bản</th>
-            <th scope="col">Tên đầu sách</th>
-            <th scope="col">Tóm lược nội dung</th>
-            <th scope="col">Khổ sách</th>
-            <td rowspan="5">
-              <img ng-src="../images/books/{{x.hinhAnh}}" style="width:100px;height:108px;"><br><br>
-              <input type="file" id="imgUpload" name="imgUpload" ng-click="chooseImg()">
-              <br><br>
-              <button class="btn btn-dark" type="button" name="button" ng-click="uploadImg(x)" ng-if="readyUpload">Lưu hình</button>
-            </td>
+            <th scope="col" style="width: 50%">ISBN</th>
+            <td>{{x.id_ISBN}}</td>
           </tr>
           <tr>
-            <td>{{x.id_ISBN}}</td>
-            <td>{{x.id_LoaiSach}}</td>
+            <th scope="col">Loại sách</th>
+            <td>{{x.subject.tenLoaiSach}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Nhà xuất bản</th>
             <td>{{x.publisher.tenNXB}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Tên đầu sách</th>
             <td>{{x.tenDS}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Tóm lược nội dung</th>
             <td>{{x.tomLuocNoiDung}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Khổ sách</th>
             <td>{{x.khoSach}}</td>
           </tr>
           <tr>
-            <td colspan="6"></td>
-          </tr>
-          <tr>
             <th scope="col">Số trang</th>
-            <th scope="col">Đính kèm</th>
-            <th scope="col">Vị trí</th>
-            <th scope="col">Ngôn ngữ</th>
-            <th scope="col">Phiên bản</th>
-            <th scope="col">Năm xuất bản</th>
+            <td>{{x.soTrang}}</td>
           </tr>
           <tr>
-            <td>{{x.soTrang}}</td>
+            <th scope="col">Đính kèm</th>
             <td>{{x.dinhKem}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Vị trí</th>
             <td>{{x.viTri}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Ngôn ngữ</th>
             <td>{{x.ngonNgu}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Phiên bản</th>
             <td>{{x.phienBan}}</td>
+          </tr>
+          <tr>
+            <th scope="col">Năm xuất bản</th>
             <td>{{x.namXuatBan | date:'dd-MM-yyyy'}}</td>
           </tr>
       </table>

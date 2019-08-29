@@ -1,0 +1,54 @@
+<h3><i class="fas fa-book ml-2"></i> QUẢN LÍ TRẢ SÁCH (CHI TIẾT)</h3>
+<hr>
+<button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createReturBooksDetail()">+ Trả sách</button>
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">{{modalTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="id_PhieuTra" class="col-form-label">Mã phiếu trả:</label>
+            <input type="number" class="form-control" name="id_PhieuTra" id="id_PhieuTra" ng-model="id_PhieuTra" ng-disabled="permenent"><br>
+
+            <label for="barcode" class="col-form-label">Barcode:</label>
+            <input list="barcode" class="form-control" name="barcode" ng-model="barcode" ng-disabled=disabled>
+            <datalist id="barcode">
+              <option ng-repeat="book in books" value="{{book.barcode}}">{{book.bookTitle.tenDS}}</option>
+            </datalist><br>
+
+            <label for="ngayTra" class="col-form-label">Ngày trả:</label>
+            <input type="date" class="form-control" name="ngayTra" id="ngayTra" ng-model="ngayTra"><br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addReturnBooksDetail(id_PhieuTra, barcode, ngayTra)">LƯU</button>
+            <button type="button" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updateReturnBooksDetail(id_PhieuTra, barcode, ngayTra)">LƯU</button>
+          </div>
+        </div>
+      </div>
+  </div>
+<div class="table-responsive">
+<table class="table table-bordered border-warning">
+  <thead>
+    <tr class="table-info">
+      <th scope="col">Mã phiếu trả</th>
+      <th scope="col">Barcode</th>
+      <th scope="col">Ngày trả</th>
+      <th colspan="3" scope="col"></th>
+  </tr>
+</thead>
+<tbody ng-repeat="x in returnBooksDetail | orderBy: 'id.id_PhieuTra' | filter: search">
+  <tr>
+    <td>{{x.id.id_PhieuTra}}</td>
+    <td>{{x.id.barcode}}</td>
+    <td>{{x.ngayTra | date: 'dd-MM-yyyy'}}</td>
+    <td class="text-center"><button data-toggle="modal" data-target="#addModal" ng-click="editReturnBooksDetail(x)"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></button></td>
+    <!-- <td class="text-center"><button ng-confirm-click="Bạn muốn xóa sách {{x.id.barcode}} ?" ng-click="deleteReturnBooksDetail(x)"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i></button></td> -->
+  </tr>
+</tbody>
+</table>
+</div>
