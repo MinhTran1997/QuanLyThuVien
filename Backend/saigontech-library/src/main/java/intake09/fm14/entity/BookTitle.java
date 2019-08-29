@@ -2,12 +2,15 @@ package intake09.fm14.entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,10 +27,18 @@ public class BookTitle {
 	@Column(name = "ID_ISBN")
 	Long id_ISBN;
 	
-	@NotNull
-	@Column(name = "ID_LOAISACH")
-	Long id_LoaiSach;
+	@ManyToOne
+	@JoinColumn(name = "ID_LOAISACH")
+	private Subject subject;
 	
+	public Subject getSubject() {
+		return subject;
+	}
+
+	public void setSubject(Subject subject) {
+		this.subject = subject;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "id_NXB")
 	private Publisher publisher;
@@ -93,19 +104,11 @@ public class BookTitle {
 
 	//GETTER, SETTER
 	public Long getId_ISBN() {
-		return id_ISBN+10000000;
+		return id_ISBN;
 	}
 
 	public void setId_ISBN(Long id_ISBN) {
 		this.id_ISBN = id_ISBN;
-	}
-
-	public Long getId_LoaiSach() {
-		return id_LoaiSach;
-	}
-
-	public void setId_LoaiSach(Long id_LoaiSach) {
-		this.id_LoaiSach = id_LoaiSach;
 	}
 	
 	public String getTenDS() {
@@ -172,19 +175,22 @@ public class BookTitle {
 		this.phienBan = phienBan;
 	}
 
-//	public Long getId_NXB() {
-//		return id_NXB;
-//	}
-//
-//	public void setId_NXB(Long id_NXB) {
-//		this.id_NXB = id_NXB;
-//	}
-
 	public Date getNamXuatBan() {
 		return namXuatBan;
 	}
 
 	public void setNamXuatBan(Date namXuatBan) {
 		this.namXuatBan = namXuatBan;
+	}
+	
+	@ManyToMany(mappedBy="bookTitles")
+    private Set<Author> authors = new HashSet<Author>();
+
+	public Set<Author> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(Set<Author> authors) {
+		this.authors = authors;
 	}
 }

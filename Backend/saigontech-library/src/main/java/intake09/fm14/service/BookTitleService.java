@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
 import intake09.fm14.entity.BookTitle;
 import intake09.fm14.repository.BookTitleRepository;
 
@@ -26,15 +25,12 @@ public class BookTitleService {
         return bookTitleRepo.save(bookTitle);
     }
     
-    public List<BookTitle> findByNameContainingWorks(String name) { return
-    		bookTitleRepo.findByContainingName(name); }
-    
     public BookTitle updateBookTitle(Long id_ISBN, BookTitle bookTitleEntity) {
     	BookTitle updatedSample;
         Optional<BookTitle> searchEntity = bookTitleRepo.findById(id_ISBN);
         if (searchEntity.isPresent()) {
         	BookTitle bookTitle = searchEntity.get();
-        	bookTitle.setId_LoaiSach(bookTitleEntity.getId_LoaiSach());
+        	bookTitle.setSubject(bookTitle.getSubject());
         	bookTitle.setPublisher(bookTitleEntity.getPublisher());
         	bookTitle.setTenDS(bookTitleEntity.getTenDS());
             bookTitle.setTomLuocNoiDung(bookTitleEntity.getTomLuocNoiDung());
@@ -45,19 +41,6 @@ public class BookTitleService {
             bookTitle.setNgonNgu(bookTitleEntity.getNgonNgu());
             bookTitle.setPhienBan(bookTitleEntity.getPhienBan());
             bookTitle.setNamXuatBan(bookTitleEntity.getNamXuatBan());
-            bookTitle.setHinhAnh(bookTitleEntity.getHinhAnh());
-            updatedSample = bookTitleRepo.save(bookTitle);
-        } else {
-            throw new EntityNotFoundException();
-        }
-        return updatedSample;
-    }
-    
-    public BookTitle updateImage(Long id_ISBN, BookTitle bookTitleEntity) {
-    	BookTitle updatedSample;
-        Optional<BookTitle> searchEntity = bookTitleRepo.findById(id_ISBN);
-        if (searchEntity.isPresent()) {
-        	BookTitle bookTitle = searchEntity.get();
             bookTitle.setHinhAnh(bookTitleEntity.getHinhAnh());
             updatedSample = bookTitleRepo.save(bookTitle);
         } else {

@@ -6,7 +6,7 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
  
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import intake09.fm14.entity.Reader;
@@ -37,7 +37,8 @@ public class ReaderService {
     		reader.setNgaysinhDG(readerEntity.getNgaysinhDG());
     		reader.setGioiTinhDG(readerEntity.getGioiTinhDG());
     		reader.setHsdThe(readerEntity.getHsdThe());
-    		reader.setPassword_DG(readerEntity.getPassword_DG());
+//    		reader.setUsername_DG(reader.getUsername_DG());
+//    		reader.setPassword_DG(readerEntity.getPassword_DG());
     		update = readerRepo.save(reader);
     	} else {
             throw new EntityNotFoundException();
@@ -45,8 +46,14 @@ public class ReaderService {
     	return update;
     }
     
-    public List<Reader> getOneById(Long id_ISBN)
-    {
-    	return (List<Reader>) readerRepo.findOneById(id_ISBN);
+    public ResponseEntity<Object> deleteReader(Long id_DG) {
+        Optional<Reader> readerEntity = readerRepo.findById(id_DG);
+        if (readerEntity.isPresent()) {
+        	Reader reader = readerEntity.get();
+        	readerRepo.delete(reader);
+        } else {
+            throw new EntityNotFoundException();
+        }
+        return ResponseEntity.ok().build();
     }
 }

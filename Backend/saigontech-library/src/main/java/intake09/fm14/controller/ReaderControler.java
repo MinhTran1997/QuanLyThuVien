@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
  
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 //import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,6 @@ import intake09.fm14.service.ReaderService;
  
 @RestController
 public class ReaderControler {
- 
     @Autowired
     ReaderService readerService;
  
@@ -27,19 +27,19 @@ public class ReaderControler {
     public List<Reader> reader() {
         return readerService.getAll();
     }
-    
-    @CrossOrigin
-    @RequestMapping(value = "/readerDetail/{id_THEDG}", method = RequestMethod.GET)
-    public List<Reader> readerById(@PathVariable(value = "id_THEDG") Long id_THEDG) {
-        return readerService.getOneById(id_THEDG);
-    }
 
     @CrossOrigin
     @RequestMapping(value = "/createReader", method = RequestMethod.POST)
     public Reader createReader(@Valid @RequestBody Reader reader) {
         return readerService.createReader(reader);
     }
- 
+    
+    @CrossOrigin
+    @RequestMapping(value = "/deleteReader/{id_DG}", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteAuthor(@PathVariable(value = "id_DG") Long id_DG) {
+        return readerService.deleteReader(id_DG);
+    }
+    
  
     @CrossOrigin
     @RequestMapping(value = "/updateReader/{id_THEDG}", method = RequestMethod.PUT)

@@ -1,8 +1,17 @@
 package intake09.fm14.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "TACGIA")
 public class Author {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TACGIA")
 	Long id_TacGia;
 	
@@ -69,5 +79,15 @@ public class Author {
 		this.trinhDo = trinhDo;
 	}
 	
-	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(name = "DS_TG", joinColumns = {@JoinColumn(name = "ID_TACGIA")}, inverseJoinColumns = {@JoinColumn(name = "ID_ISBN")})
+	private Set<BookTitle> bookTitles = new HashSet<BookTitle>();
+
+	public Set<BookTitle> getBookTitles() {
+		return bookTitles;
+	}
+
+	public void setBookTitles(Set<BookTitle> bookTitles) {
+		this.bookTitles = bookTitles;
+	}
 }

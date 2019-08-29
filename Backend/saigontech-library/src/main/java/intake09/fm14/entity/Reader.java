@@ -1,13 +1,15 @@
 package intake09.fm14.entity;
 
-//import java.util.Collection;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-//import javax.persistence.FetchType;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.OneToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,14 +21,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "DOCGIA")
 public class Reader {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_THEDG")
-	Long id_THEDG;
+	Long id_TheDG;
 	
 	@NotNull
 	@Column(name = "HOTENDG")
 	String hotenDG;
 	
-	@Column(name = "SDT")
+	@Column(name = "SDTDG")
 	String sdt;
 	
 	@NotNull
@@ -34,7 +37,7 @@ public class Reader {
 	String emailDG;
 	
 	@NotNull
-	@Column(name = "DIACHI")
+	@Column(name = "DIACHIDG")
 	String diaChi;
 	
 	@NotNull
@@ -45,7 +48,7 @@ public class Reader {
 	
 	@NotNull
 	@Column(name = "GIOITINHDG")
-	Boolean gioiTinhDG;
+	String gioiTinhDG;
 	
 	@NotNull
 	@Temporal(TemporalType.DATE)
@@ -61,15 +64,18 @@ public class Reader {
 	@Column(name = "PASSWORD_DG")
 	String password_DG;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reader")
+	private Collection<BorrowBooks> borrowBooks;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reader")
+	private Collection<ReturnBooks> returnBooks;
 
-
-	public Long getId_THEDG() {
-		return id_THEDG;
+	public Long getId_TheDG() {
+		return id_TheDG;
 	}
 
-	public void setId_THEDG(Long id_THEDG) {
-		this.id_THEDG = id_THEDG;
+	public void setId_TheDG(Long id_TheDG) {
+		this.id_TheDG = id_TheDG;
 	}
 
 	public String getHotenDG() {
@@ -112,11 +118,11 @@ public class Reader {
 		this.ngaysinhDG = ngaysinhDG;
 	}
 	
-	public Boolean getGioiTinhDG() {
+	public String getGioiTinhDG() {
 		return gioiTinhDG;
 	}
 
-	public void setGioiTinhDG(Boolean gioiTinhDG) {
+	public void setGioiTinhDG(String gioiTinhDG) {
 		this.gioiTinhDG = gioiTinhDG;
 	}
 	
