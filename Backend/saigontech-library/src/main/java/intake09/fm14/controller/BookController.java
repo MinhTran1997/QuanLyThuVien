@@ -52,6 +52,12 @@ public class BookController {
     }
     
     @CrossOrigin
+    @RequestMapping(value = "/checkExistBarcodeByStatus/{barcode}", method = RequestMethod.GET)
+    public Long CheckExistBarcodeByStatus(@PathVariable(value = "barcode") Long barcode) {
+        return bookService.checkExistBarcodeByStatus(barcode);
+    }
+    
+    @CrossOrigin
     @RequestMapping(value = "/deleteBook/{barcode}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteBook(@PathVariable(value = "barcode") Long barcode) {
         return bookService.deleteBook(barcode);

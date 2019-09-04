@@ -1,93 +1,50 @@
 <h3><i class="fas fa-book ml-2"></i> QUẢN LÍ MƯỢN SÁCH</h3>
 <hr>
-<button class="btn btn-primary mb-4 ml-2" data-toggle="modal" data-target="#addModal" ng-click="createBorrowBooks()">+ Tạo phiếu</button>
-  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addModalLabel">{{modalTitle}}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <label for="id_PhieuMuon" class="col-form-label" ng-if="modifying">Mã phiếu mượn:</label>
-            <input type="number" class="form-control" ng-if="modifying" name="id_PhieuMuon" id="id_PhieuMuon" ng-model="id_PhieuMuon" ng-disabled=disabled><br>
+<div class="row" style="padding: 2em">
+  <div class="col-sm-6">
+    <label for="id_ThuThu" class="col-form-label">Người lập phiếu:</label>
+    <input type="text" class="form-control" name="id_ThuThu" id="id_ThuThu" ng-model="id_ThuThu" ng-disabled=permenent><br>
 
-            <label for="id_ThuThu" class="col-form-label">Người lập phiếu:</label>
-            <input type="text" class="form-control" name="id_ThuThu" id="id_ThuThu" ng-model="id_ThuThu" ng-disabled=permenent><br>
+    <label for="id_TheDG" class="col-form-label">Độc giả:</label>
+    <input list="id_TheDG" id="readerByBarcode" class="form-control" name="readerByBarcode" ng-model="id_TheDG" ng-disabled="barcodeNotEmpty" my-enter="enterId_TheDG(id_TheDG)">
+    <datalist id="id_TheDG">
+      <option ng-repeat="reader in readers" value="{{reader.id_TheDG}}-{{reader.hotenDG}}"></option>
+    </datalist>
+    <br>
 
-            <label for="id_TheDG" class="col-form-label">Độc giả:</label>
-            <input list="id_TheDG" class="form-control" name="id_TheDG" ng-model="id_TheDG" ng-disabled=disabled>
-            <datalist id="id_TheDG">
-              <option ng-repeat="reader in readers" value="{{reader.id_TheDG}}-{{reader.hotenDG}}"></option>
-            </datalist>
-            <br>
+    <label for="barcode" class="col-form-label">Barcode:</label>
+    <input list="barcode" id="code" class="form-control" name="code" ng-model="barcode" ng-disabled=disabled>
+    <datalist id="barcode">
+      <option ng-repeat="book in books" value="{{book.barcode}}">{{book.bookTitle.tenDS}}</option>
+    </datalist><br><br>
 
-            <label for="barcode" class="col-form-label">Barcode:</label>
-            <div class="row" style="margin: 0px 0px">
-
-              <input list="barcode" id="code" class="form-control col-sm-11" name="code" ng-model="code" ng-disabled=disabled>
-              <datalist id="barcode">
-                <option ng-repeat="book in books" value="{{book.barcode}}">{{book.bookTitle.tenDS}}</option>
-              </datalist><br>
-
-            <button type="button" class="btn btn-dark col-sm-1" name="button" ng-click="addBarcode()">+</button>
-            </div><br>
-            <span ng-repeat="code in codes" ng-click="removeBarcode(code)" style="color:white;background-color:#6c757d;border-radius:0.3125‬px;padding:0.625em;margin-right:0.8em;cursor:pointer">{{code}} <span style="color:red;font-weight:bold">X</span> </span><br><br>
-
-            <label for="ngayHuaTra" class="col-form-label">Ngày hứa trả:</label>
-            <input type="date" class="form-control" name="ngayHuaTra" id="ngayHuaTra" ng-model="ngayHuaTra"><br>
-
-            <label for="ngayLapPM" class="col-form-label">Ngày lập phiếu:</label>
-            <input type="date" class="form-control" name="ngayLapPM" id="ngayLapPM" ng-model="ngayLapPM" ng-disabled=permenent><br>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">ĐÓNG</button>
-            <button type="button" class="btn btn-primary" data-dismiss="{{save1}}" ng-if="adding" ng-click="addBorrowBooks(id_PhieuMuon, 1, getId(getIdLength(id_TheDG)), ngayHuaTra, ngayLapPM)">LƯU</button>
-            <button type="button" class="btn btn-primary" data-dismiss="{{save2}}" ng-if="modifying" ng-click="updateBorrowBooks(id_PhieuMuon, id_ThuThu, id_TheDG, ngayLapPM)">LƯU</button>
-          </div>
-        </div>
-      </div>
+    <button type="button" class="btn btn-dark" name="button" ng-click="addBorrowBooks(id_PhieuMuon, id_ThuThu, id_TheDG, barcode, ngayHuaTra, ngayLapPM)">MƯỢN SÁCH</button>
   </div>
-<div class="table-responsive">
-<table class="table table-bordered border-warning" id="accordion">
+
+  <div class="col-sm-6">
+    <label for="ngayLapPM" class="col-form-label">Ngày lập phiếu:</label>
+    <input type="date" class="form-control" name="ngayLapPM" id="ngayLapPM" ng-model="ngayLapPM" ng-disabled=permenent><br>
+
+    <label for="ngayHuaTra" class="col-form-label">Ngày hứa trả:</label>
+    <input type="date" class="form-control" name="ngayHuaTra" id="ngayHuaTra" ng-model="ngayHuaTra">
+  </div>
+</div>
+<hr>
+
+<div class="table-responsive" ng-if="enter">
+<table class="table table-bordered border-warning text-center" id="accordion">
   <thead>
     <tr class="table-info">
-      <th scope="col">Mã phiếu mượn</th>
-      <th scope="col">Độc giả</th>
-      <th scope="col">Người lập phiếu</th>
-      <th scope="col">Ngày lập phiếu</th>
-      <th colspan="3" scope="col"></th>
+      <th scope="col" width="30%">Barcode</th>
+      <th scope="col" width="30%">Ngày hứa trả</th>
+      <th scope="col" width="40%">Trạng thái</th>
   </tr>
 </thead>
-<tbody ng-repeat="x in borrowBooks | orderBy: 'id_PhieuMuon' | filter: search">
-  <tr class="card-header" id="heading" data-toggle="collapse" data-target="#{{x.id_PhieuMuon}}" aria-expanded="true" aria-controls="{{x.id_PhieuMuon}}" ng-click="showBorrowBooksDetail(x)">
-    <td>{{x.id_PhieuMuon}}</td>
-    <td>{{x.reader.hotenDG}}</td>
-    <td>{{x.librarian.hoTenTT}}</td>
-    <td>{{x.ngayLapPM | date:'dd-MM-yyyy'}}</td>
-    <td class="text-center"><a href="#!/borrowBooksDetail/{{x.id_PhieuMuon}}" class="btn btn-primary">Chi tiết</a></td>
-    <!-- <td class="text-center"><button data-toggle="modal" data-target="#addModal" ng-click="editBorrowBooks(x)"><i class="fas fa-edit bg-warning p-2 text-white rounded"></i></button></td> -->
-    <!-- <td class="text-center"><button ng-confirm-click="Bạn muốn xóa phiếu mượn {{x.id_PhieuMuon}} ?" confirmed-click="deleteBorrowBooks(x)"><i class="fas fa-trash-alt bg-danger p-2 text-white rounded" ></i></button></td> -->
-  </tr>
-  <tr id="{{x.id_PhieuMuon}}" class="collapse" aria-labelledby="heading" data-parent="#accordion">
-    <td colspan="5">
-      <table width="100%" class="text-center">
-        <thead>
-          <tr>
-            <th scope="col" style="width: 50%">Barcode</th>
-            <th scope="col">Ngày hứa trả</th>
-          </tr>
-        </thead>
-        <tbody ng-repeat="detail in borrowBooksDetail">
-          <tr>
-            <td>{{detail.id.barcode}}</td>
-            <td>{{detail.ngayHuaTra | date:'dd-MM-yyyy'}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </td>
+<tbody ng-repeat="x in borrowedBooks | filter: search">
+  <tr style="background-color:{{bg_Color(x[2].trangThai)}};color:{{color(x[2].trangThai)}}">
+    <td>{{x[0].id.barcode}}</td>
+    <td>{{x[0].ngayHuaTra | date:'dd-MM-yyyy'}}</td>
+    <td>{{x[2].trangThai}}</td>
   </tr>
 </tbody>
 </table>

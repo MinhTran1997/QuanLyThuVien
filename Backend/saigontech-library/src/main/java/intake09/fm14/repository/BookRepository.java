@@ -18,4 +18,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	
 	@Query("FROM Book WHERE trangThai = ?1")
 	List<Book> findAllBorrowedBooks(String trangThai);
+	
+	@Query("SELECT barcode FROM Book WHERE trangThai = 'In Stock' AND barcode = ?1")
+	Long checkExistBarcodeByStatus(Long barcode);
 }

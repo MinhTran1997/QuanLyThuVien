@@ -20,6 +20,10 @@ public class BorrowBooksService {
     public List<BorrowBooks> getAll() {
         return (List<BorrowBooks>) borrowBooksRepo.findAll();
     }
+    
+    public List<Long> getIdByReader(Long id_TheDG) {
+        return (List<Long>) borrowBooksRepo.findIdByReader(id_TheDG);
+    }
  
     public BorrowBooks createBorrowBooks(BorrowBooks BorrowBooks) {
         return borrowBooksRepo.save(BorrowBooks);

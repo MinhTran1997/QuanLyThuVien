@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import intake09.fm14.entity.BorrowBooksDetail;
+import intake09.fm14.entity.Reader;
 import intake09.fm14.service.BorrowBooksDetailService;
 
 @RestController
@@ -37,6 +38,30 @@ public class BorrowBooksDetailController {
     @RequestMapping(value = "/borrowBooksDetailById/{id_PhieuMuon}", method = RequestMethod.GET)
     public List<BorrowBooksDetail> borrowBooksDetailById(@PathVariable(value = "id_PhieuMuon") Long id_PhieuMuon) {
         return borrowBookDetailService.getAllById(id_PhieuMuon);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/borrowBooksDetailByManyId/{id_PhieuMuon}", method = RequestMethod.GET)
+    public List<Object> borrowBooksDetailById(@PathVariable(value = "id_PhieuMuon") List<Long> id_PhieuMuon) {
+        return borrowBookDetailService.getAllByManyId(id_PhieuMuon);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/borrowBooksDetailByBarcode/{barcode}", method = RequestMethod.GET)
+    public List<Object> borrowBooksDetailByReader(@PathVariable(value = "barcode") Long barcode) {
+        return borrowBookDetailService.getAllByBarcode(barcode);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/readerByBarcode/{barcode}", method = RequestMethod.GET)
+    public Reader readerByBarcode(@PathVariable(value = "barcode") Long barcode) {
+        return borrowBookDetailService.getReaderByBarcode(barcode);
+    }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/checkExistBarcode/{barcode}", method = RequestMethod.GET)
+    public Long checkExistBarcode(@PathVariable(value = "barcode") Long barcode) {
+        return borrowBookDetailService.checkExistBarcode(barcode);
     }
     
     @CrossOrigin

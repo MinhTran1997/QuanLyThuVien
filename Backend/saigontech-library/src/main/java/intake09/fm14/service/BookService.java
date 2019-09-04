@@ -36,6 +36,11 @@ public class BookService {
     	return (List<Book>) bookRepo.findAllBorrowedBooks(trangThai);
     }
     
+    public Long checkExistBarcodeByStatus(Long barcode)
+    {
+    	return (Long) bookRepo.checkExistBarcodeByStatus(barcode);
+    }
+    
     public Book createBook(Book book) {
         return bookRepo.save(book);
     }

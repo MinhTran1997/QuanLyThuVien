@@ -26,6 +26,12 @@ public class BorrowBooksController {
     public List<BorrowBooks> BorrowBooks() {
         return BorrowBooksService.getAll();
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/borrowBooksIdByReader/{id_TheDG}", method = RequestMethod.GET)
+    public List<Long> borrowBooksIdByReader(@PathVariable(value = "id_TheDG") Long id_TheDG) {
+        return BorrowBooksService.getIdByReader(id_TheDG);
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/createBorrowBooks", method = RequestMethod.POST)

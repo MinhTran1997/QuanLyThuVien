@@ -34,17 +34,9 @@ myApp.config(["$routeProvider", function($routeProvider) {
         templateUrl : "views/borrowBooks.html",
         controller: "borrowBooksCtrl"
     })
-    .when("/borrowBooksDetail/:id_PhieuMuon", {
-        templateUrl : "views/borrowBooksDetail.html",
-        controller: "borrowBooksDetailCtrl"
-    })
     .when("/returnBooks", {
         templateUrl : "views/returnBooks.html",
         controller: "returnBooksCtrl"
-    })
-    .when("/returnBooksDetail/:id_PhieuTra", {
-        templateUrl : "views/returnBooksDetail.html",
-        controller: "returnBooksDetailCtrl"
     })
     .otherwise({
         redirectTo: "/home"
@@ -279,10 +271,16 @@ myApp.controller('bookTitleCtrl', function($scope, $http)
       {
         if(response.data)
         {
-          // var pos = $scope.bookTitles.indexOf(id_ISBN);
-          // $scope.bookTitles.splice(pos, 1);//Xóa liền mà không cần load lại trang
           alert("Đã cập nhật lại đầu sách " + id_ISBN + "!");
-          location.reload();
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/bookTitle"
+          }).then(function mySuccess(response) {
+            $scope.bookTitles = response.data;
+          }, function myError(response) {
+            $scope.bookTitles = response.statusText;
+          });
+          // location.reload();
         }
       }, function(response)
           {
@@ -568,7 +566,14 @@ myApp.controller('publisherCtrl', function($scope, $http)
         if(response.data)
         {
           alert("Đã cập nhật lại nhà xuất bản " + id_NXB + "!");
-          location.reload();
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/publisher",
+          }).then(function mySuccess(response) {
+            $scope.publishers = response.data;
+          }, function myError(response) {
+            $scope.publishers = response.statusText;
+          });
         }
       }, function(response)
           {
@@ -713,7 +718,14 @@ myApp.controller('authorCtrl', function($scope, $http)
         if(response.data)
         {
           alert("Đã cập nhật lại tác giả " + id_TacGia + "!");
-          location.reload();
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/author",
+          }).then(function mySuccess(response) {
+            $scope.authors = response.data;
+          }, function myError(response) {
+            $scope.authors = response.statusText;
+          });
         }
       }, function(response)
           {
@@ -895,7 +907,14 @@ myApp.controller('readerCtrl', function($scope, $http)
         if(response.data)
         {
           alert("Đã cập nhật lại độc giả " + id_TheDG + "!");
-          location.reload();
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/reader",
+          }).then(function mySuccess(response) {
+            $scope.reader = response.data;
+          }, function myError(response) {
+            $scope.reader = response.statusText;
+          });
         }
       }, function(response)
           {
@@ -1025,7 +1044,14 @@ myApp.controller('subjectCtrl', function($scope, $http)
         if(response.data)
         {
           alert("Đã cập nhật lại thể loại sách " + id_LoaiSach + "!");
-          location.reload();
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/subject",
+          }).then(function mySuccess(response) {
+            $scope.subject = response.data;
+          }, function myError(response) {
+            $scope.subject = response.statusText;
+          });
         }
       }, function(response)
           {
@@ -1090,7 +1116,64 @@ myApp.controller('borrowBooksCtrl', function($scope, $rootScope, $http)
     $scope.readers = response.statusText;
   });
 
-  $scope.getIdLength = function(id_And_Name)
+  //Mã thủ thư
+  $scope.id_ThuThu = 1;
+
+  //Hiển thị ngày tháng năm hiện hành
+  var a = new Date();
+  var y = a.getFullYear();
+  var m = a.getMonth();
+  var d = a.getDate();
+  var currentDate = new Date(y, m, d);
+  $scope.ngayLapPM = currentDate;
+
+  var temp = [];
+  $scope.enterId_TheDG = function(id_TheDG)
+  {
+    $scope.enter = true;
+    if(id_TheDG == null)
+    {
+      return;
+    }
+    else
+    {
+        $http({
+          method : "GET",
+            url : "http://localhost:8080/borrowBooksIdByReader/" + getId(getIdLength(id_TheDG))
+        }).then(function mySuccess(response) {
+          temp = response.data;
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/borrowBooksDetailByManyId/" + temp
+          }).then(function mySuccess(response) {
+            $scope.borrowedBooks = response.data;
+          }, function myError(response) {
+            $scope.enter = false;
+            console.clear();
+            return;
+          });
+
+        }, function myError(response) {
+          $scope.enter = false;
+          console.clear();
+          return;
+        });
+    }
+  }
+
+  $scope.bg_Color = function(trangThai)
+  {
+    if(trangThai == "Borrowed") return "#fff";
+    if(trangThai == "In Stock") return "#c7a228";
+  }
+
+  $scope.color = function(trangThai)
+  {
+    if(trangThai == "Borrowed") return "#212529";
+    if(trangThai == "In Stock") return "#fff";
+  }
+
+  function getIdLength(id_And_Name)
   {
     var count = 0;
     for (var i = 0; i < id_And_Name.length; i++) {
@@ -1101,138 +1184,52 @@ myApp.controller('borrowBooksCtrl', function($scope, $rootScope, $http)
     return count;
   }
 
-  $scope.getId = function(length)
+  function getId(length)
   {
     return $scope.id_TheDG.substring(0, length);
   }
 
-  $scope.showBorrowBooksDetail = function(borrowBooksDetail)
-  {
-    var id_PhieuMuon = borrowBooksDetail.id_PhieuMuon;
-    $http({
-      method : "GET",
-        url : "http://localhost:8080/borrowBooksDetailById/" + id_PhieuMuon,
-    }).then(function mySuccess(response) {
-      $scope.borrowBooksDetail = response.data;
-    }, function myError(response) {
-      $scope.borrowBooksDetail = response.statusText;
-    });
-  }
-
-  $scope.codes = [];
-  $scope.numberOfBarcode = 0;
-  $scope.addBarcode = function()
-  {
-    var code = document.getElementById("code").value;
-    if($scope.numberOfBarcode == 3)
-    {
-        alert("Không thể mượn quá 3 cuốn!");
-        return;
-    }
-    if(code == "")
-    {
-      alert("Vui lòng nhập barcode!");
-      return;
-    }
-    if($scope.codes.includes(code))
-    {
-      alert("Barcode này đã có trong danh sách!");
-      document.getElementById("code").value = "";
-      return;
-    }
-
-    $scope.codes.push(code);
-    document.getElementById("code").value = "";
-    $scope.numberOfBarcode++;
-  }
-
-  $scope.removeBarcode = function(codes)
-  {
-    var pos = $scope.codes.indexOf(codes);
-    $scope.codes.splice(pos, 1);
-    document.getElementById("code").value = "";
-    $scope.numberOfBarcode--;
-  }
-
-  $scope.createBorrowBooks = function()//Khi bấm vào nút THÊM
-  {
-    $scope.modalTitle = "TẠO PHIẾU MƯỢN SÁCH";//Thay đổi tiêu đề của modal
-    $scope.adding = true;//Đang thêm = true
-    $scope.modifying = false;//Đang sửa = false
-    $scope.disabled = false;//enable id_ISBN
-
-    //Khi thêm mới thì các field trong form phải trống
-    // $scope.id_PhieuMuon = "";
-    $scope.id_ThuThu = 1;
-    $scope.id_TheDG = "";
-    $scope.codes = [];
-    document.getElementById("code").value = "";
-    $scope.numberOfBarcode = 0;
-
-    var a = new Date();
-    var y = a.getFullYear();
-    var m = a.getMonth();
-    var d = a.getDate();
-    var currentDate = new Date(y, m, d);
-    $scope.ngayLapPM = currentDate;
-
-    var stringCurrentDate = y + "-" + (m.toString().length == 1 ? 0 : "") + (m + 1) + "-" + d;//Định dạng yyyy-MM-dd để gán vào ngayLapPM (chú ý nếu tháng chỉ có 1 chữ số thì phải thêm số 0 đằng trước)
-    document.getElementById("ngayLapPM").value = ymd(stringCurrentDate);
-  };
-
   //Lấy dữ liệu dạng JSON ở server bằng phương thức $http.post
-  $scope.addBorrowBooks = function (id_PhieuMuon, id_ThuThu, id_TheDG, ngayHuaTra, ngayLapPM)//Lưu lúc thêm
+  $scope.addBorrowBooks = function (id_PhieuMuon, id_ThuThu, id_TheDG, barcode, ngayHuaTra, ngayLapPM)//Lưu lúc thêm
   {
-    // alert(" id_ThuThu: " + id_ThuThu + " id_TheDG: " + id_TheDG + " Barcode: " + $scope.codes + " ngayHuaTra: " + ngayHuaTra + " ngayLapPM: " + ngayLapPM);
-    if(id_ThuThu == null || $scope.codes == "" || id_TheDG == null || ngayHuaTra == null || ngayLapPM == null)
+    //alert(" id_ThuThu: " + id_ThuThu + " id_TheDG: " + getId(getIdLength(id_TheDG)) + " Barcode: " + barcode + " ngayHuaTra: " + ngayHuaTra + " ngayLapPM: " + ngayLapPM);
+    if(barcode == null || id_TheDG == null || ngayHuaTra == null || ngayLapPM == null)
     {
       alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save1 = "";//Nhập thiếu thì form không biến mất
       return;
     }
-    else
+    if(ngayHuaTra <= ngayLapPM)
     {
-      $scope.save1 = "modal";//Nhập đủ thì lưu lại và form biến mất
+      alert("Ngày hứa trả sách phải lớn hơn ngày lập phiếu mượn!");
+      return;
+    }
 
-      var data =
-      {
-        id_PhieuMuon: "",
-        librarian: {
-            id_ThuThu: id_ThuThu,
-            hoTenTT: "",
-            sdt: "",
-            emailTT: "",
-            diaChiTT: "",
-            ngaySinhTT: "",
-            gioiTinhTT: "",
-            username_TT: "",
-            password_TT: ""
-        },
-        reader: {
-          id_TheDG: id_TheDG,
-          hotenDG: "",
-          sdt: "",
-          emailDG: "",
-          diaChi: "",
-          ngaysinhDG: "",
-          gioiTinhDG: "",
-          hsdThe: "",
-          username_DG: "",
-          password_DG: ""
-      },
-        ngayLapPM: ngayLapPM
-      };
+    $http({
+      method : "GET",
+      url : "http://localhost:8080/checkExistBarcode/" + barcode
+    }).then(function mySuccess(response) {
+      $scope.checkExistBarcode = response.data;
 
-      $http.post('http://localhost:8080/createBorrowBooks', JSON.stringify(data)).then(function(response)
+      if($scope.checkExistBarcode != "")
       {
-        if(response.data)
-        {
-          alert("Đã tạo mới một phiếu mượn!");
-          $scope.borrowBooks.push(
+        alert("Sách " + barcode + " đang được mượn!");
+        return;
+      }
+      else
+      {
+        $http({
+          method : "GET",
+          url : "http://localhost:8080/bookByBarcode/" + barcode
+        }).then(function mySuccess(response) {
+          $scope.checkBarcode = response.data;
+
+          if($scope.checkBarcode != "")
+          {
+            var data =
             {
-              id_PhieuMuon: data.id_PhieuMuon,
+              id_PhieuMuon: "",
               librarian: {
-                  id_ThuThu: data.librarian.id_ThuThu,
+                  id_ThuThu: id_ThuThu,
                   hoTenTT: "",
                   sdt: "",
                   emailTT: "",
@@ -1243,7 +1240,7 @@ myApp.controller('borrowBooksCtrl', function($scope, $rootScope, $http)
                   password_TT: ""
               },
               reader: {
-                id_TheDG: data.reader.id_TheDG,
+                id_TheDG: getId(getIdLength(id_TheDG)),
                 hotenDG: "",
                 sdt: "",
                 emailDG: "",
@@ -1254,314 +1251,66 @@ myApp.controller('borrowBooksCtrl', function($scope, $rootScope, $http)
                 username_DG: "",
                 password_DG: ""
             },
-              ngayLapPM: data.ngayLapPM
-           });//Ngay khi thêm dữ liệu thành công thì show ra dữ liệu mà không cần load lại trang
-          // location.reload();
-          var ID = $scope.borrowBooks.length;
-           //////////////////////////////////////////////////////////////////////////////////////////////////////
-           //Thêm chi tiết phiếu mượn
-           for (var i = 0; i < $scope.codes.length; i++)
-           {
-             var data2 = {
-               id: {
-                 id_PhieuMuon: ID,
-                 barcode: $scope.codes[i],
-               },
-               ngayHuaTra: ngayHuaTra
-             };
+              ngayLapPM: ngayLapPM
+            };
 
-             $http.post('http://localhost:8080/createBorrowBooksDetail', JSON.stringify(data2)).then(function(response)
-             {
-               if(response.data)
-               {
-                 location.reload();
-               }
-             }, function(response)
-                 {
-                   alert("Thêm chi tiết phiếu mượn thất bại!");
-                 });
-           }
-           //////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-      }, function(response)
-          {
-            alert("Thêm thất bại!");
-            $scope.borrowBooks = response.statusText;
-          });
-    }
-  };
-
-  $scope.editBorrowBooks = function(borrowBooks)//Khi bấm vào biểu tượng sửa
-  {
-    $scope.modalTitle = "CẬP NHẬT PHIẾU MƯỢN SÁCH";//Thay đổi tiêu đề của modal
-    $scope.adding = false;//Đang thêm = false
-    $scope.modifying = true;//Đang sửa = true
-    $scope.disabled = true;//disable id_ISBN không cho sửa
-
-    $scope.id_PhieuMuon = borrowBooks.id_PhieuMuon;
-    $scope.id_ThuThu = borrowBooks.librarian.id_ThuThu;
-    $scope.id_TheDG = borrowBooks.reader.id_TheDG;
-
-    var myDate = ymd(borrowBooks.ngayLapPM);
-    document.getElementById("ngayLapPM").value = ymd(myDate);//Muốn gán giá trị cho date input thì bắt buộc phải là định dạng yyyy-MM-dd
-    var finalDate = new Date(myDate);
-    $scope.ngayLapPM = finalDate;
-  };
-
-  //Sửa dữ liệu JSON ở server bằng phương thức $http.put
-  $scope.updateBorrowBooks = function (id_PhieuMuon, id_ThuThu, id_TheDG, ngayLapPM)//Lưu lúc sửa
-  {
-    if(id_ThuThu == null || id_TheDG == null || ngayLapPM == null)
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save2 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save2 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id_PhieuMuon: id_PhieuMuon,
-        librarian: {
-            id_ThuThu: id_ThuThu,
-            hoTenTT: "",
-            sdt: "",
-            emailTT: "",
-            diaChiTT: "",
-            ngaySinhTT: "",
-            gioiTinhTT: "",
-            username_TT: "",
-            password_TT: ""
-        },
-        reader: {
-          id_TheDG: id_TheDG,
-          hotenDG: "",
-          sdt: "",
-          emailDG: "",
-          diaChi: "",
-          ngaysinhDG: "",
-          gioiTinhDG: "",
-          hsdThe: "",
-          username_DG: "",
-          password_DG: ""
-      },
-        ngayLapPM: ngayLapPM
-      };
-
-      $http.put('http://localhost:8080/updateBorrowBooks/' + id_PhieuMuon, JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã cập nhật lại phiếu mượn " + id_PhieuMuon + "!");
-          location.reload();
-        }
-      }, function(response)
-          {
-            alert("Sửa thất bại!");
-          });
-    }
-  };
-
-  //Xóa dữ liệu JSON ở server bằng phương thức $http.delete
-  $scope.deleteBorrowBooks = function(borrowBooks)////Khi bấm vào nút DELETE
-  {
-    var data =
-    {
-      id_PhieuMuon: borrowBooks.id_PhieuMuon,
-    };
-
-    $http.delete('http://localhost:8080/deleteBorrowBooks/' + borrowBooks.id_PhieuMuon, JSON.stringify(data)).then(function(response)
-    {
-      if(!response.data)//Xóa thì không còn dữ liệu :D
-      {
-        alert("Đã xóa phiếu mượn " + borrowBooks.id_PhieuMuon + "!");
-        var pos = $scope.borrowBooks.indexOf(borrowBooks);
-        $scope.borrowBooks.splice(pos, 1);//Xóa liền mà không cần load lại trang
-      }
-    }, function(response)
-        {
-          alert("Xảy ra lỗi!");
-        });
-  };
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-myApp.controller('borrowBooksDetailCtrl', function($scope, $http, $routeParams)
-{
-  $scope.permenent = true;
-  var id_PhieuMuon = parseInt($routeParams.id_PhieuMuon);
-
-  $http({
-    method : "GET",
-      url : "http://localhost:8080/borrowBooksDetailById/" + id_PhieuMuon,
-  }).then(function mySuccess(response) {
-    $scope.borrowBooksDetail = response.data;
-  }, function myError(response) {
-    $scope.borrowBooksDetail = response.statusText;
-  });
-
-  $http({
-    method : "GET",
-      url : "http://localhost:8080/booksByStatus/" + "In Stock"
-  }).then(function mySuccess(response) {
-    $scope.books = response.data;
-  }, function myError(response) {
-    $scope.books = response.statusText;
-  });
-
-  $scope.createBorrowBooksDetail = function()//Khi bấm vào nút THÊM
-  {
-    $scope.modalTitle = "THÊM SÁCH MƯỢN";//Thay đổi tiêu đề của modal
-    $scope.adding = true;//Đang thêm = true
-    $scope.modifying = false;//Đang sửa = false
-    $scope.disabled = false;//enable
-
-    //Khi thêm mới thì các field trong form phải trống
-    $scope.id_PhieuMuon = id_PhieuMuon;
-    $scope.barcode = "";
-    $scope.ngayHuaTra = ""
-  };
-
-  $scope.addBorrowBooksDetail = function (id_PhieuMuon, barcode, ngayHuaTra)//Lưu lúc thêm
-  {
-
-    var a = new Date();
-    var y = a.getFullYear();
-    var m = a.getMonth() + 1;
-    var d = a.getDay();
-    var currentDate = new Date(y, m, d);
-
-    var finalNgayHuaTra = ymd(ngayHuaTra.toString());
-    var returnDate = new Date(finalNgayHuaTra);
-
-    if(returnDate < currentDate)
-    {
-      alert("Ngày hứa trả phải lớn hơn hoặc bằng ngày hiện hành!");
-      return;
-    }
-
-    if(barcode == "" || ngayHuaTra == "")
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save1 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save1 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id: {
-          id_PhieuMuon: id_PhieuMuon,
-          barcode: barcode
-        },
-        ngayHuaTra: ngayHuaTra
-      };
-
-      $http.post('http://localhost:8080/createBorrowBooksDetail', JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã thêm mới một sách mượn!");
-          $scope.borrowBooksDetail.push(
+            $http.post('http://localhost:8080/createBorrowBooks', JSON.stringify(data)).then(function(response)
             {
-              id: {
-                id_PhieuMuon: data.id.id_PhieuMuon,
-                barcode: data.id.barcode
-              },
-              ngayHuaTra: data.ngayHuaTra
-           });//Ngay khi thêm dữ liệu thành công thì show ra dữ liệu mà không cần load lại trang
-        }
-      }, function(response)
+              if(response.data)
+              {
+                 //////////////////////////////////////////////////////////////////////////////////////////////////////
+                 //Thêm chi tiết phiếu mượn
+                 var ID = $scope.borrowBooks.length + 1;
+                 var data2 = {
+                   id: {
+                     id_PhieuMuon: ID,
+                     barcode: barcode
+                   },
+                   ngayHuaTra: ngayHuaTra
+                 };
+                   // alert("id: " + data2.id.id_PhieuMuon + "\nbarcode: " + data2.id.barcode + "\nngayHuaTra: " + data2.ngayHuaTra);
+
+                   $http.post('http://localhost:8080/createBorrowBooksDetail', JSON.stringify(data2)).then(function(response)
+                   {
+                     if(response.data)
+                     {
+                       alert("Đã mượn sách " + barcode + "!");
+                       $scope.enterId_TheDG(id_TheDG);
+                     }
+                   }, function(response)
+                       {
+                         alert("Thêm chi tiết phiếu mượn thất bại!");
+                       });
+                 //////////////////////////////////////////////////////////////////////////////////////////////////////
+              }
+            }, function(response)
+                {
+                  alert("Thêm phiếu mượn thất bại!");
+                  return;
+                });
+          }
+          else
           {
-            alert("Thêm thất bại!");
-            $scope.borrowBooksDetail = response.statusText;
-          });
-    }
-  };
-
-  $scope.editBorrowBooksDetail = function(borrowBooksDetail)//Khi bấm vào biểu tượng sửa
-  {
-    $scope.modalTitle = "CẬP NHẬT SÁCH MƯỢN";//Thay đổi tiêu đề của modal
-    $scope.adding = false;//Đang thêm = false
-    $scope.modifying = true;//Đang sửa = true
-    $scope.disabled = true;//disable không cho sửa
-
-    $scope.id_PhieuMuon = borrowBooksDetail.id.id_PhieuMuon;
-    $scope.barcode = borrowBooksDetail.id.barcode;
-
-    var myDate = ymd(borrowBooksDetail.ngayHuaTra);
-    document.getElementById("ngayHuaTra").value = ymd(myDate);//Muốn gán giá trị cho date input thì bắt buộc phải là định dạng yyyy-MM-dd
-    var finalDate = new Date(myDate);
-    $scope.ngayHuaTra = finalDate;
-  };
-
-  $scope.updateBorrowBooksDetail = function (id_PhieuMuon, barcode, ngayHuaTra)//Lưu lúc sửa
-  {
-    if(id_PhieuMuon == "" || barcode == "" || ngayHuaTra == "")
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save2 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save2 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id: {
-          id_PhieuMuon: id_PhieuMuon,
-          barcode: barcode
-        },
-        ngayHuaTra: ngayHuaTra
-      };
-
-      $http.put('http://localhost:8080/updateBorrowBooksDetail/' + id_PhieuMuon + "&" + barcode, JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã cập nhật lại chi tiết phiếu mượn " + id_PhieuMuon + "!");
-          location.reload();
-        }
-      }, function(response)
-          {
-            alert("Sửa thất bại!");
-          });
-    }
-  };
-
-  $scope.deleteBorrowBooks = function(borrowBooksDetail)////Khi bấm vào nút DELETE
-  {
-
-    var data =
-    {
-      id_PhieuMuon: borrowBooksDetail.id.id_PhieuMuon,
-    };
-
-    $http.delete('http://localhost:8080/deleteBorrowBooksDetail/' + borrowBooksDetail.id.id_PhieuMuon + "&" + borrowBooksDetail.id.barcode, JSON.stringify(data)).then(function(response)
-    {
-      if(!response.data)//Xóa thì không còn dữ liệu :D
-      {
-        alert("Đã xóa sách mượn " + borrowBooksDetail.id.barcode + "!");
-        var pos = $scope.borrowBooksDetail.indexOf(borrowBooksDetail);
-        $scope.borrowBooksDetail.splice(pos, 1);//Xóa liền mà không cần load lại trang
-
-
-      }
-    }, function(response)
-        {
-          alert("Xảy ra lỗi!");
+            alert("Barcode không hợp lệ!");
+            return;
+          }
+        }, function myError(response) {
+          alert("Barcode không hợp lệ!");
+          return;
         });
+      }
+    }, function myError(response) {
+      alert("Barcode không hợp lệ!");
+      return;
+    });
   };
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 myApp.controller('returnBooksCtrl', function($scope, $http)
 {
+  $scope.permenent = true;
+
   //Lấy dữ liệu dạng JSON ở server bằng phương thức $http.get
   $http({
     method : "GET",
@@ -1581,226 +1330,6 @@ myApp.controller('returnBooksCtrl', function($scope, $http)
     $scope.readers = response.statusText;
   });
 
-  $scope.createReturnBooks = function()//Khi bấm vào nút THÊM
-  {
-    $scope.modalTitle = "TẠO PHIẾU TRẢ SÁCH";//Thay đổi tiêu đề của modal
-    $scope.adding = true;//Đang thêm = true
-    $scope.modifying = false;//Đang sửa = false
-    $scope.disabled = false;//enable id_ISBN
-
-    //Khi thêm mới thì các field trong form phải trống
-    $scope.id_PhieuTra = "";
-    $scope.id_TheDG = "";
-    $scope.id_ThuThu = "";
-
-    var a = new Date();
-    var y = a.getFullYear();
-    var m = a.getMonth();
-    var d = a.getDate();
-    var currentDate = new Date(y, m, d);
-    var stringCurrentDate = y + "-" + (m + 1) + "-" + d;
-    $scope.ngayLapPT = currentDate;
-    document.getElementById("ngayLapPT").value = ymd(stringCurrentDate);
-  };
-
-  //Lấy dữ liệu dạng JSON ở server bằng phương thức $http.post
-  $scope.addReturnBooks = function (id_PhieuTra, id_TheDG, id_ThuThu, ngayLapPT)//Lưu lúc thêm
-  {
-
-    if(id_TheDG == "" || id_ThuThu == "" || ngayLapPT == "")
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save1 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save1 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id_PhieuTra: id_PhieuTra,
-        reader: {
-          id_TheDG: id_TheDG,
-          hotenDG: "",
-          sdt: "",
-          emailDG: "",
-          diaChi: "",
-          ngaysinhDG: "",
-          gioiTinhDG: "",
-          hsdThe: "",
-          username_DG: "",
-          password_DG: ""
-      },
-        librarian: {
-            id_ThuThu: id_ThuThu,
-            hoTenTT: "",
-            sdt: "",
-            emailTT: "",
-            diaChiTT: "",
-            ngaySinhTT: "",
-            gioiTinhTT: "",
-            username_TT: "",
-            password_TT: ""
-        },
-        ngayLapPT: ngayLapPT
-      };
-
-      $http.post('http://localhost:8080/createReturnBooks', JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã tạo mới một phiếu trả!");
-          $scope.returnBooks.push(
-            {
-              id_PhieuMuon: data.id_PhieuTra,
-              reader: {
-                id_TheDG: data.id_TheDG,
-                hotenDG: "",
-                sdt: "",
-                emailDG: "",
-                diaChi: "",
-                ngaysinhDG: "",
-                gioiTinhDG: "",
-                hsdThe: "",
-                username_DG: "",
-                password_DG: ""
-            },
-            librarian: {
-                id_ThuThu: data.id_ThuThu,
-                hoTenTT: "",
-                sdt: "",
-                emailTT: "",
-                diaChiTT: "",
-                ngaySinhTT: "",
-                gioiTinhTT: "",
-                username_TT: "",
-                password_TT: ""
-            },
-              ngayLapPT: data.ngayLapPT
-           });//Ngay khi thêm dữ liệu thành công thì show ra dữ liệu mà không cần load lại trang
-           location.reload();
-        }
-      }, function(response)
-          {
-            alert("Thêm thất bại!");
-            $scope.subject = response.statusText;
-          });
-    }
-  };
-
-  $scope.editReturnBooks = function(returnBooks)//Khi bấm vào biểu tượng sửa
-  {
-    $scope.modalTitle = "CẬP NHẬT PHIẾU MƯỢN SÁCH";//Thay đổi tiêu đề của modal
-    $scope.adding = false;//Đang thêm = false
-    $scope.modifying = true;//Đang sửa = true
-    $scope.disabled = true;//disable id_ISBN không cho sửa
-
-    $scope.id_PhieuTra = returnBooks.id_PhieuTra;
-    $scope.id_TheDG = returnBooks.reader.id_TheDG;
-    $scope.id_ThuThu = returnBooks.librarian.id_ThuThu;
-
-    var myDate = ymd(returnBooks.ngayLapPT);
-    document.getElementById("ngayLapPT").value = ymd(myDate);//Muốn gán giá trị cho date input thì bắt buộc phải là định dạng yyyy-MM-dd
-    var finalDate = new Date(myDate);
-    $scope.ngayLapPT = finalDate;
-  };
-
-  //Sửa dữ liệu JSON ở server bằng phương thức $http.put
-  $scope.updateReturnBooks = function (id_PhieuTra, id_TheDG, id_ThuThu, ngayLapPT)//Lưu lúc sửa
-  {
-    if(id_TheDG == "" || id_ThuThu == "" || ngayLapPT == "")
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save2 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save2 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id_PhieuTra: id_PhieuTra,
-        reader: {
-          id_TheDG: id_TheDG,
-          hotenDG: "",
-          sdt: "",
-          emailDG: "",
-          diaChi: "",
-          ngaysinhDG: "",
-          gioiTinhDG: "",
-          hsdThe: "",
-          username_DG: "",
-          password_DG: ""
-      },
-      librarian: {
-          id_ThuThu: id_ThuThu,
-          hoTenTT: "",
-          sdt: "",
-          emailTT: "",
-          diaChiTT: "",
-          ngaySinhTT: "",
-          gioiTinhTT: "",
-          username_TT: "",
-          password_TT: ""
-      },
-        ngayLapPT: ngayLapPT
-      };
-
-      $http.put('http://localhost:8080/updateReturnBooks/' + id_PhieuTra, JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã cập nhật lại phiếu trả " + id_PhieuTra + "!");
-          location.reload();
-        }
-      }, function(response)
-          {
-            alert("Sửa thất bại!");
-          });
-    }
-  };
-
-  //Xóa dữ liệu JSON ở server bằng phương thức $http.delete
-  $scope.deleteReturnBooks = function(returnBooks)////Khi bấm vào nút DELETE
-  {
-    var data =
-    {
-      id_PhieuTra: returnBooks.id_PhieuTra,
-    };
-
-    $http.delete('http://localhost:8080/deleteReturnBooks/' + returnBooks.id_PhieuTra, JSON.stringify(data)).then(function(response)
-    {
-      if(!response.data)//Xóa thì không còn dữ liệu :D
-      {
-        alert("Đã xóa phiếu trả " + returnBooks.id_PhieuTra + "!");
-        var pos = $scope.returnBooks.indexOf(returnBooks);
-        $scope.returnBooks.splice(pos, 1);//Xóa liền mà không cần load lại trang
-      }
-    }, function(response)
-        {
-          alert("Xảy ra lỗi!");
-        });
-  };
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-myApp.controller('returnBooksDetailCtrl', function($scope, $http, $routeParams)
-{
-  $scope.permenent = true;
-  var id_PhieuTra = parseInt($routeParams.id_PhieuTra);
-  var id_TheDG = parseInt($routeParams.id_TheDG);
-
-  $http({
-    method : "GET",
-      url : "http://localhost:8080/returnBooksDetailById/" + id_PhieuTra,
-  }).then(function mySuccess(response) {
-    $scope.returnBooksDetail = response.data;
-  }, function myError(response) {
-    $scope.returnBooksDetail = response.statusText;
-  });
-
   $http({
     method : "GET",
       url : "http://localhost:8080/booksByStatus/" + "Borrowed"
@@ -1810,144 +1339,246 @@ myApp.controller('returnBooksDetailCtrl', function($scope, $http, $routeParams)
     $scope.books = response.statusText;
   });
 
-  $scope.createReturBooksDetail = function()//Khi bấm vào nút THÊM
+  $scope.checkBarcode = function(barcode)
   {
-    $scope.modalTitle = "TRẢ SÁCH";//Thay đổi tiêu đề của modal
-    $scope.adding = true;//Đang thêm = true
-    $scope.modifying = false;//Đang sửa = false
-    $scope.disabled = false;//enable
-
-    //Khi thêm mới thì các field trong form phải trống
-    $scope.id_PhieuTra = id_PhieuTra;
-    $scope.barcode = "";
-
-    var a = new Date();
-    var y = a.getFullYear();
-    var m = a.getMonth();
-    var d = a.getDate();
-    var currentDate = new Date(y, m, d);
-    var stringCurrentDate = y + "-" + (m + 1) + "-" + d;
-    $scope.ngayTra = currentDate;
-    document.getElementById("ngayTra").value = ymd(stringCurrentDate);
-  };
-
-  $scope.addReturnBooksDetail = function (id_PhieuTra, barcode, ngayTra)//Lưu lúc thêm
-  {
-    if(barcode == "" || ngayTra == "")
+    if($scope.barcode != "")
     {
-      alert("Vui lòng nhập những thông tin cần thiết!");
+      $scope.barcodeNotEmpty = true;
+      $scope.enterBarcode(barcode);
+    }
+    else
+    {
+      $scope.barcodeNotEmpty = false;
+      document.getElementById("readerByBarcode").value = "";
+    }
+  }
 
-      $scope.save1 = "";//Nhập thiếu thì form không biến mất
+  //Mã thủ thư
+  $scope.id_ThuThu = 1;
+
+  //Hiển thị ngày tháng năm hiện hành
+  var a = new Date();
+  var y = a.getFullYear();
+  var m = a.getMonth();
+  var d = a.getDate();
+  var currentDate = new Date(y, m, d);
+  $scope.ngayLapPT = currentDate;
+  $scope.ngayTra = currentDate;
+
+  $scope.bg_Color = function(trangThai)
+  {
+    if(trangThai == "Borrowed") return "#fff";
+    if(trangThai == "In Stock") return "#c7a228";
+  }
+
+  $scope.color = function(trangThai)
+  {
+    if(trangThai == "Borrowed") return "#212529";
+    if(trangThai == "In Stock") return "#fff";
+  }
+
+  function getIdLength(id_And_Name)
+  {
+    var count = 0;
+    for (var i = 0; i < id_And_Name.length; i++) {
+      if(id_And_Name.charAt(i) == "-")
+        count++;
+    }
+
+    return count;
+  }
+
+  function getId(length)
+  {
+    return $scope.id_TheDG.substring(0, length);
+  }
+
+  var temp = [];
+  $scope.enterId_TheDG = function(id_TheDG)
+  {
+    $scope.enter = true;
+    if(id_TheDG == null)
+    {
       return;
     }
     else
     {
-      $scope.save1 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id: {
-          id_PhieuTra: id_PhieuTra,
-          barcode: barcode
-        },
-        ngayTra: ngayTra
-      };
-
-      $http.post('http://localhost:8080/createReturnBooksDetail', JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã trả lại sách " + barcode + "!");
-          $scope.returnBooksDetail.push(
-            {
-              id: {
-                id_PhieuTra: data.id.id_PhieuTra,
-                barcode: data.id.barcode
-              },
-              ngayTra: data.ngayTra
-           });//Ngay khi thêm dữ liệu thành công thì show ra dữ liệu mà không cần load lại trang
-        }
-      }, function(response)
-          {
-            alert("Thêm thất bại!");
-            $scope.returnBooksDetail = response.statusText;
+        $http({
+          method : "GET",
+            url : "http://localhost:8080/borrowBooksIdByReader/" + getId(getIdLength(id_TheDG))
+        }).then(function mySuccess(response) {
+          temp = response.data;
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/borrowBooksDetailByManyId/" + temp
+          }).then(function mySuccess(response) {
+            $scope.borrowedBooks = response.data;
+          }, function myError(response) {
+            $scope.enter = false;
+            console.clear();
+            return;
           });
-    }
-  };
 
-  $scope.editReturnBooksDetail = function(returnBooksDetail)//Khi bấm vào biểu tượng sửa
-  {
-    $scope.modalTitle = "CẬP NHẬT SÁCH TRẢ";//Thay đổi tiêu đề của modal
-    $scope.adding = false;//Đang thêm = false
-    $scope.modifying = true;//Đang sửa = true
-    $scope.disabled = true;//disable không cho sửa
-
-    $scope.id_PhieuTra = returnBooksDetail.id.id_PhieuTra;
-    $scope.barcode = returnBooksDetail.id.barcode;
-
-    var myDate = ymd(returnBooksDetail.ngayTra);
-    document.getElementById("ngayTra").value = ymd(myDate);//Muốn gán giá trị cho date input thì bắt buộc phải là định dạng yyyy-MM-dd
-    var finalDate = new Date(myDate);
-    $scope.ngayTra = finalDate;
-  };
-
-  $scope.updateReturnBooksDetail = function (id_PhieuTra, barcode, ngayTra)//Lưu lúc sửa
-  {
-    if(id_PhieuTra == "" || barcode == "" || ngayTra == "")
-    {
-      alert("Vui lòng nhập những thông tin cần thiết!");
-      $scope.save2 = "";//Nhập thiếu thì form không biến mất
-      return;
-    }
-    else
-    {
-      $scope.save2 = "modal";//Nhập đủ thì lưu lại và form biến mất
-
-      var data =
-      {
-        id: {
-          id_PhieuTra: id_PhieuTra,
-          barcode: barcode
-        },
-        ngayTra: ngayTra
-      };
-
-      $http.put('http://localhost:8080/updateReturnBooksDetail/' + id_PhieuTra + "&" + barcode, JSON.stringify(data)).then(function(response)
-      {
-        if(response.data)
-        {
-          alert("Đã cập nhật lại chi tiết phiếu trả " + id_PhieuTra + "!");
-          location.reload();
-        }
-      }, function(response)
-          {
-            alert("Sửa thất bại!");
-          });
-    }
-  };
-
-  $scope.deleteReturnBooksDetail = function(returnBooksDetail)////Khi bấm vào nút DELETE
-  {
-
-    var data =
-    {
-      id_PhieuTra: returnBooksDetail.id.id_PhieuTra,
-    };
-
-    $http.delete('http://localhost:8080/deleteBorrowBooksDetail/' + returnBooksDetail.id.id_PhieuTra + "&" + returnBooksDetail.id.barcode, JSON.stringify(data)).then(function(response)
-    {
-      if(!response.data)//Xóa thì không còn dữ liệu :D
-      {
-        alert("Đã xóa sách mượn " + returnBooksDetail.id.barcode + "!");
-        var pos = $scope.returnBooksDetail.indexOf(returnBooksDetail);
-        $scope.returnBooksDetail.splice(pos, 1);//Xóa liền mà không cần load lại trang
-
-
-      }
-    }, function(response)
-        {
-          alert("Xảy ra lỗi!");
+        }, function myError(response) {
+          $scope.enter = false;
+          console.clear();
+          return;
         });
+    }
+  }
+
+  $scope.enterBarcode = function(barcode)
+  {
+    $scope.enter = true;
+
+    $http({
+      method : "GET",
+        url : "http://localhost:8080/borrowBooksDetailByBarcode/" + barcode
+    }).then(function mySuccess(response) {
+      $scope.borrowedBooks = response.data;
+    }, function myError(response) {
+      $scope.borrowedBooks = response.statusText;
+    });
+
+    $http({
+      method : "GET",
+        url : "http://localhost:8080/readerByBarcode/" + barcode
+    }).then(function mySuccess(response) {
+      if(response.data != "")
+      {
+      var readers = response.data;
+      var readerByBarcode = readers["id_TheDG"] + "-" + readers["hotenDG"];
+      document.getElementById("readerByBarcode").value = readerByBarcode;
+      $scope.id_TheDG = readerByBarcode;
+      }
+      else
+      {
+        document.getElementById("readerByBarcode").value = "";
+        $scope.id_TheDG = "";
+        return;
+      };
+    }, function myError(response) {
+      return;
+    });
+  }
+
+  $scope.checkStatus = function(trangThai)
+  {
+      if(trangThai == "Borrowed")//Đang mượn
+      {
+        $scope.bg_Color = "#fff";
+        $scope.color = "#212529";
+      }
+      else//Trả rồi
+      {
+        $scope.bg_Color = "#c7a228";
+        $scope.color = "#fff";
+      }
+  }
+
+  //Lấy dữ liệu dạng JSON ở server bằng phương thức $http.post
+  $scope.addReturnBooks = function (id_PhieuTra, id_ThuThu, id_TheDG, barcode, ngayTra, ngayLapPT)//Lưu lúc thêm
+  {
+
+    if(id_TheDG == null || barcode == null)
+    {
+      alert("Vui lòng nhập những thông tin cần thiết!");
+      return;
+    }
+    else
+    {
+      $http({
+        method : "GET",
+          url : "http://localhost:8080/checkExistBarcodeByStatus/" + barcode
+      }).then(function mySuccess(response) {
+        if(response.data != "")
+        {
+          alert("Sách này đã được trả rồi!");
+          return;
+        }
+        else
+        {
+          $http({
+            method : "GET",
+              url : "http://localhost:8080/bookByBarcode/" + barcode
+          }).then(function mySuccess(response) {
+            if(response.data != "")
+            {
+              var data =
+              {
+                id_PhieuTra: id_PhieuTra,
+                reader: {
+                  id_TheDG: getId(getIdLength(id_TheDG)),
+                  hotenDG: "",
+                  sdt: "",
+                  emailDG: "",
+                  diaChi: "",
+                  ngaysinhDG: "",
+                  gioiTinhDG: "",
+                  hsdThe: "",
+                  username_DG: "",
+                  password_DG: ""
+              },
+                librarian: {
+                    id_ThuThu: id_ThuThu,
+                    hoTenTT: "",
+                    sdt: "",
+                    emailTT: "",
+                    diaChiTT: "",
+                    ngaySinhTT: "",
+                    gioiTinhTT: "",
+                    username_TT: "",
+                    password_TT: ""
+                },
+                ngayLapPT: ngayLapPT
+              };
+
+              $http.post('http://localhost:8080/createReturnBooks', JSON.stringify(data)).then(function(response)
+              {
+                if(response.data)
+                {
+                  //////////////////////////////////////////////////////////////////////////////////////////////////////
+                  //Thêm chi tiết phiếu mượn
+                  var ID = ($scope.returnBooks.length == 0 ? ($scope.returnBooks.length + 1) : ($scope.returnBooks.length));
+                  var data2 =
+                  {
+                    id: {
+                      id_PhieuTra: ID,
+                      barcode: barcode,
+                    },
+                    ngayTra: ngayTra
+                  };
+                    // alert("id: " + data2.id.id_PhieuTra + "\nbarcode: " + data2.id.barcode + "\nngayTra: " + data2.ngayTra);
+                    $http.post('http://localhost:8080/createReturnBooksDetail', JSON.stringify(data2)).then(function(response)
+                    {
+                      if(response.data)
+                      {
+                        alert("Đã trả sách " + barcode + "!");
+                        $scope.enterBarcode(barcode);
+                      }
+                    }, function(response)
+                        {
+                          alert("Thêm chi tiết phiếu trả thất bại!");
+                        });
+                  //////////////////////////////////////////////////////////////////////////////////////////////////////
+                }
+              }, function(response)
+                  {
+                    alert("Thêm phiếu trả thất bại!");
+                  });
+            }
+            else
+            {
+              alert("Barcode không hợp lệ!");
+            }
+          }, function myError(response) {
+            alert("Barcode không hợp lệ!");
+          });
+        }
+      }, function myError(response) {
+        alert("Barcode không hợp lệ!");
+      });
+    }
   };
 });
 
@@ -1967,6 +1598,20 @@ myApp.directive('ngConfirmClick', [
             }
         };
 }]);
+
+myApp.directive('myEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.myEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 myApp.controller('myCtrlLogin', function ($scope, $rootScope, $http, $cookies) {

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import intake09.fm14.entity.BorrowBooksDetail;
+import intake09.fm14.entity.Reader;
 import intake09.fm14.repository.BorrowBooksDetailRepository;
 
 @Service
@@ -24,6 +25,25 @@ public class BorrowBooksDetailService {
     public List<BorrowBooksDetail> getAllById(Long id_PhieuMuon)
     {
     	return (List<BorrowBooksDetail>) borrowBooksDetailRepo.findAll(id_PhieuMuon);
+    }
+    
+    public List<Object> getAllByManyId(List<Long> id_PhieuMuon)
+    {
+    	return (List<Object>) borrowBooksDetailRepo.findByManyId(id_PhieuMuon);
+    }
+    
+    public List<Object> getAllByBarcode(Long barcode)
+    {
+    	return (List<Object>) borrowBooksDetailRepo.findByBarcode(barcode);
+    }
+    
+    public Reader getReaderByBarcode(Long barcode)
+    {
+    	return (Reader) borrowBooksDetailRepo.findReaderByBarcode(barcode);
+    }
+    
+    public Long checkExistBarcode(Long barcode) {
+        return (Long) borrowBooksDetailRepo.checkExistBarcode(barcode);
     }
     
     public BorrowBooksDetail createBorrowBooksDetail(BorrowBooksDetail borrowBooksDetail) {
