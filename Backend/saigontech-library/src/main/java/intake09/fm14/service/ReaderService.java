@@ -17,6 +17,10 @@ public class ReaderService {
 	@Autowired
 	ReaderRepository readerRepo;
  
+	public List<Object> thongKeDG(String username_DG){
+		return (List<Object>) readerRepo.ThongKeDocGia(username_DG);
+	}
+	
     public List<Reader> getAll() {
         return (List<Reader>) readerRepo.findAll();
     }

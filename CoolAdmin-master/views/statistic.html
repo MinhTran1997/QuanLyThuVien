@@ -1,0 +1,51 @@
+<h3><i class="fas fa-file-alt ml-2"></i> THỐNG KÊ LỊCH SỬ MƯỢN</h3>
+<hr>
+<div class="row" style="padding: 2em">
+    <div style="display: inline-block" class="col-sm-3">
+        <label class="col-form-label">Từ ngày:</label>
+        <input type="date" class="form-control" ng-model="fromdate" id="from">
+    </div>
+    <div style="display: inline-block" class="col-sm-3">
+        <label class="col-form-label">Đến ngày:</label>
+        <input type="date" class="form-control" ng-model="todate" id="to">
+    </div>
+    <div style="display: inline-block" class="col-sm-3">
+        <label class="col-form-label">Username:</label>
+        <input type="text" class="form-control" ng-model="username">
+        <span id="invalid" style="font-size: 18px; color: red"></span>
+    </div>
+    <div style="display: inline-block" class="col-sm-3">
+        <label class="col-form-label"></label>
+        <button class="btn btn-primary mb-4 ml-1" style="display: block" ng-click="submit()">Xem</button>
+    </div>
+</div>
+
+<div class="table-responsive" style="padding: 2em">
+    <table id="stat" class="table table-bordered table-hover border-warning text-center">
+        <thead>
+            <tr class="table-info">
+                <!--<th>Mã phiếu mượn</th>-->
+                <th>Tên độc giả</th>
+                <th>Username</th>
+                <th>Tên đầu sách</th>
+                <th>Barcode</th>
+                <th>Ngày mượn</th>
+                <th>Ngày hứa trả</th>
+                <th>Ngày trả</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="x in mang">
+            <!--lấy dữ liệu trong mảng rỗng đã được đổ dữ liệu bên dưới Srcipt-->
+            <tr>
+                <!--<td>{{x[0]}}</td>-->
+                <td>{{x[1]}}</td>
+                <td>{{x[2]}}</td>
+                <td>{{x[3]}}</td>
+                <td>{{x[4]}}</td>
+                <td>{{x[5]}}</td>
+                <td>{{x[6]}}</td>
+                <td>{{x[7]}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

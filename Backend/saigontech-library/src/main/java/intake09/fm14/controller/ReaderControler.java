@@ -27,6 +27,12 @@ public class ReaderControler {
     public List<Reader> reader() {
         return readerService.getAll();
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/thongKeDG", method = RequestMethod.GET)
+    public List<Object> thongKeDG(String username_DG) {
+        return readerService.thongKeDG(username_DG);
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/createReader", method = RequestMethod.POST)

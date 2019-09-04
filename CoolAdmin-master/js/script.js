@@ -38,6 +38,10 @@ myApp.config(["$routeProvider", function($routeProvider) {
         templateUrl : "views/returnBooks.html",
         controller: "returnBooksCtrl"
     })
+    .when("/statistic", {
+        templateUrl : "views/statistic.html",
+        controller: "ThongKeCtrl"
+    })
     .otherwise({
         redirectTo: "/home"
     });
@@ -1623,6 +1627,7 @@ myApp.controller('myCtrlLogin', function ($scope, $rootScope, $http, $cookies) {
     document.getElementById("reader").style.display = "none";
     document.getElementById("borrowBooks").style.display = "none";
     document.getElementById("returnBooks").style.display = "none";
+    document.getElementById("statistic").style.display = "none";
 
     document.getElementById("search").style.display = "none";
     document.getElementById("user").style.display = "none";
@@ -1649,6 +1654,8 @@ myApp.controller('myCtrlLogin', function ($scope, $rootScope, $http, $cookies) {
                     document.getElementById("reader").style.display = "block";
                     document.getElementById("borrowBooks").style.display = "block";
                     document.getElementById("returnBooks").style.display = "block";
+                    document.getElementById("statistic").style.display = "block";
+
                     document.getElementById("search").style.display = "block";
                     document.getElementById("user").style.display = "block";
 
@@ -1675,3 +1682,65 @@ myApp.controller('myCtrlLogin', function ($scope, $rootScope, $http, $cookies) {
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////----------Thống kê-------------
+
+//Controller
+myApp.controller('ThongKeCtrl', function ($scope, $http) {
+
+  //khi load trang thì table sẽ bị ẩn
+  document.getElementById("stat").style.display = "none";
+
+  function _getthongke() {
+      $http({
+          method: "GET",
+          url: "http://localhost:8080/thongKeDG"
+      }).then(function mySuccess(response) {
+          $scope.thongKe = response.data;
+      });
+  }
+
+  //lấy dữ liệu json
+  _getthongke();
+
+  //load mảng rỗng đã được đổ dữ liệu bên dưới
+  $scope.mang = [];
+
+  //khi ấn nút submit thì dùng hàm này 
+  $scope.submit = function () {
+      //khởi tạo mảng rỗng
+      $scope.mang = [];
+      console.log($scope.fromdate);
+      if ($scope.username == null) { //ko nhập username thì thông báo phải nhập
+          document.getElementById("invalid").innerHTML = "Vui lòng nhập username!";
+      } else if ($scope.fromdate == null && $scope.todate == null) { //nếu ko chọn từ ngày đến ngày thì xổ ra hết
+          for (var i = 0; i < $scope.thongKe.length; i++) {
+              if ($scope.thongKe[i][2] == $scope.username) {
+                  //nếu thỏa đk trên thì đổ dữ liệu thỏa đk vào mảng rỗng đã tạo
+                  $scope.mang.push($scope.thongKe[i]);
+                  console.log($scope.thongKe[i]);
+              }
+          }
+      } else if ($scope.fromdate != null && $scope.todate != null) { //nếu có chọn từ ngày đến ngày
+          for (var i = 0; i < $scope.thongKe.length; i++) {
+
+              ////convert string to date
+              var ngaymuon = $scope.thongKe[i][5]; 
+              var muon = new Date(ngaymuon);                   
+              var ngayhuatra = $scope.thongKe[i][6];
+              var huatra = new Date(ngayhuatra);
+              var ngaytra = $scope.thongKe[i][7];
+              var tra = new Date(ngaytra);
+
+              if ($scope.thongKe[i][2] == $scope.username && muon >= $scope.fromdate && muon <= $scope.todate) {
+                  //đổ dữ liệu thỏa điều kiện if vào mảng rỗng
+                  $scope.mang.push($scope.thongKe[i]);
+                  console.log($scope.thongKe[i]);
+              }
+          }
+      }
+      //khi ấn submit thì table sẽ hiện ra
+      document.getElementById("stat").style.display = "block";
+  }
+
+});
