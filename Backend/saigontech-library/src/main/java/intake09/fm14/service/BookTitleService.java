@@ -25,6 +25,11 @@ public class BookTitleService {
         return bookTitleRepo.save(bookTitle);
     }
     
+    public List<BookTitle> findByNameContainingWorks(String name) 
+    { 
+    	return bookTitleRepo.findByContainingName(name); 
+    }
+    
     public BookTitle updateBookTitle(Long id_ISBN, BookTitle bookTitleEntity) {
     	BookTitle updatedSample;
         Optional<BookTitle> searchEntity = bookTitleRepo.findById(id_ISBN);

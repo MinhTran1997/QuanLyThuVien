@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
  
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,12 @@ public class BookTitleController {
     public List<BookTitle> bookTitleById(@PathVariable(value = "id_ISBN") Long id_ISBN) {
         return bookTitleService.getOneById(id_ISBN);
     }
+    
+    @CrossOrigin
+    @RequestMapping(value = "/searchByContain/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BookTitle> searchByContainWork(@PathVariable String name)
+    {
+    	return bookTitleService.findByNameContainingWorks(name); }
 
     @CrossOrigin
     @RequestMapping(value = "/createBookTitle", method = RequestMethod.POST)

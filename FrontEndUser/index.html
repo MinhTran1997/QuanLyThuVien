@@ -36,12 +36,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <script src="search.js"></script>
+    <script src="angular-cookies.js"></script>
 </head>
 
 <body ng-app="myApp">
 
     <!-- Navigation -->
-    <header ng-include="'header.html'"></header>
+    <header ng-include="'header.html'" id="header"></header>
     <!-- Masthead -->
     
    <div class="container">
@@ -49,7 +50,7 @@
    </div>
 
     <!-- Footer -->
-    <footer class="footer bg-light ">
+    <footer class="footer bg-light" id="footer">
         <aside ng-include="'footer.html'"></aside>
     </footer>
 

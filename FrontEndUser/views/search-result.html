@@ -3,7 +3,7 @@
         <form style="padding-bottom: 10px; padding-top: 25px ">
             <div class="form-row ">
                 <div class="col-12 col-md-10 mb-2 mb-md-0">
-                    <input type="email " class="form-control form-control-lg " placeholder="Search something here..." ng-model="search.name">
+                    <input type="text" class="form-control form-control-lg " placeholder="Search something here..." ng-model="search.name">
                 </div>
                 <div class="col-12 col-md-2 ">
                     <a href="#!/clicksearch/{{search.name}}" style="font-size: 21px;" class="btn btn-block btn-lg btn-primary" >Search now !</a>
@@ -16,35 +16,47 @@
             <h1 class="my-4 ">Search
                 <small>Result</small>
             </h1>
-            
+
         </div>
     </div>
     <div class="row mb-2" ng-repeat="book in books">
-        <div class="col-md-12 mt-2">
-            <h3>Tên: {{book.tenDS}}</h3>
-            <p>Giới Thiệu Nội Dung:{{book.tomLuocNoiDung}}</p>
-            <p>Nhà Xuất Bản: {{book.publisher.tenNXB}}</p>
-            <p>Ngôn Ngữ: {{book.ngonNgu}}</p>
-            <button class="btn btn-info mb-3 mt-2" data-toggle="collapse" data-target="#collapse{{book.id_ISBN}}"
-                aria-expanded="true" aria-controls="collapseOne">
+        <div class="col-md-8">
+            <a href="#!/clickdetail/{{book.id_ISBN}}" style="font-size: 21px;" target="_parent" >{{book.tenDS}}</a>
+            <p>Overview: {{book.tomLuocNoiDung}}</p>
+            <p>Publisher: {{book.publisher.tenNXB}}</p>
+            <p>Language: {{book.ngonNgu}}</p>
+            <a  class="btn btn-info mb-3 mt-2" data-toggle="collapse" data-target="#collapse{{book.id_ISBN}}"
+                aria-expanded="true" aria-controls="collapseOne" ng-click="detail(book)">
                 More Detail
-            </button>
+             </a>
             <div id="accordion">
                 <div class="card">
                     <div id="collapse{{book.id_ISBN}}" class="collapse" aria-labelledby="headingOne"
                         data-parent="#accordion">
                         <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
-                            squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
-                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
-                            single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                            beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice
-                            lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
-                            probably haven't heard of them accusamus labore sustainable VHS.
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Barcode</th>
+                                    <th scope="col">Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="detail in details">
+                                    <th scope="row">{{detail.barcode}}</th>
+                                    <td>{{detail.trangThai}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4 ">
+          <a href="#!/clickdetail/{{book.id_ISBN}}">
+            <img ng-src="../img/image/{{book.hinhAnh}}" alt="..." height="175" width="130"/>
+          </a>
         </div>
     </div>
     </hr>

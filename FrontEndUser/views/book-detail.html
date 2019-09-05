@@ -1,0 +1,119 @@
+<style>
+    .abc {
+        display: inline-block;
+        margin-left: 5px;
+    }
+</style>
+
+<div class="container ">
+
+    <div class="row ">
+
+        <!-- Post Content Column -->
+        <div class="col-lg-10 " ng-repeat="book in bookdetails">
+
+            <!-- Title -->
+            <h1 class="mt-4 ">Book Detail</h1>
+
+            <!-- Date/Time -->
+
+            <hr>
+            <div class="container ">
+
+                <div class="row ">
+                    <div class="col-lg-4 ">
+                        <img style="padding-top: 35px; padding-bottom: 20px" 
+                            src="img/image/{{book.hinhAnh}}" height="430" width="250 " alt="book_image ">
+                    </div>
+                    <div class="col-lg-8 ">
+                        <h4 class="mt-4 " style="padding-top: 10px; padding-bottom: 10px">Book Information</h4>
+                        <i>ID:</i>
+                        <p class="abc">{{book.id_ISBN}}</p>
+                        </br>
+                        <i>Name:</i>
+                        <p class="abc">{{book.tenDS}}</p>
+                        </br>
+                        <i>Author(s):</i>
+                        <p class="abc">Gary B. Shelly, Thomas J. Cashman</p>
+                        </br>
+                        <i>Category:</i>
+                        <p class="abc">Science</p>
+                        </br>
+                        <i>Publishing Date:</i>
+                        <p class="abc">{{book.namXuatBan}}</p>
+                        </br>
+                        <i>Publishing Company:</i>
+                        <p class="abc">{{book.publisher.tenNXB}}</p>
+                        </br>
+                        <i style="margin-right: 5px;">Status:</i>
+                        <a style="color: blue;" data-toggle="collapse" data-target="#collapse{{book.id_ISBN}}"
+                            aria-expanded="true" aria-controls="collapseOne" ng-click="detail(book)" id="btnDetail"> Click here for detail
+                        </a>
+                        <div id="accordion" style="display: none">
+                            <div class="card">
+                                <div id="collapse{{book.id_ISBN}}" class="collapse" aria-labelledby="headingOne"
+                                    data-parent="#accordion">
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Barcode</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="detail in details">
+                                                    <th scope="row">{{detail.barcode}}</th>
+                                                    <td>{{detail.trangThai}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </br>
+                        <i>Page number:</i>
+                        <p class="abc">{{book.soTrang}}</p>
+                        </br>
+                        <i>Page size:</i>
+                        <p class="abc">{{book.khoSach}}</p>
+                        </br>
+                        <i>Locate:</i>
+                        <p class="abc">{{book.viTri}}</p>
+                        </br>
+                        <i>Version:</i>
+                        <p class="abc">{{book.phienBan}}</p>
+                        </br>
+                        <i>Language: </i>
+                        <p class="abc">{{book.ngonNgu}}</p>
+                        </br>
+                        <i>Components:</i>
+                        <p class="abc">{{book.dinhKem}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Preview Image -->
+
+            <hr>
+
+            <!-- Post Content -->
+            <h6 style="padding-top: 10px; padding-bottom: 10px">Book Description: </h6>
+
+            <p>{{book.tomLuocNoiDung}}</p>
+
+            <hr>
+
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-2 ">
+
+
+
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+</div>
