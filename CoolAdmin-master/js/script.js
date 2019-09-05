@@ -390,48 +390,56 @@ myApp.controller('bookTitleDetailCtrl', function($scope, $http, $routeParams)
     var soLuong = document.getElementById("soLuong").value;
     var message = false;
 
-    if(soLuong > 10)
+    if(soLuong > 10 || soLuong < 0)
     {
-      alert("Số lượng không được lớn hơn 10!");
+      alert("Số lượng không được lớn hơn 10 hoặc nhỏ hơn 0!");
       return;
       $scope.save1 = "";
     }
-    else $scope.save1 = "modal";
-
-    for (var i = 0; i < soLuong; i++)
+    else if(soLuong == "")
     {
-      var bookData =
+      alert("Vui lòng nhập số lượng!");
+      return;
+      $scope.save1 = "";
+    }
+    else
+    {
+      $scope.save1 = "modal";
+      for (var i = 0; i < soLuong; i++)
       {
-          bookTitle: {
-            id_ISBN: id_ISBN,
-            id_LoaiSach: "",
-            id_NXB: "",
-            tenDS: "",
-            tomLuocNoiDung: "",
-            khoSach: "",
-            soTrang: "",
-            dinhKem: "",
-            viTri: "",
-            ngonNgu: "",
-            phienBan: "",
-            namXuatBan: ""
-          },
-          trangThai: "In Stock"
-      };
-
-      $http.post('http://localhost:8080/createBook', JSON.stringify(bookData)).then(function(response)
-      {
-        if(response.data && !message)
+        var bookData =
         {
-          alert("Đã thêm " + soLuong + " sách!");
-          location.reload();
-          message = true;
-        }
-      }, function(response)
+            bookTitle: {
+              id_ISBN: id_ISBN,
+              id_LoaiSach: "",
+              id_NXB: "",
+              tenDS: "",
+              tomLuocNoiDung: "",
+              khoSach: "",
+              soTrang: "",
+              dinhKem: "",
+              viTri: "",
+              ngonNgu: "",
+              phienBan: "",
+              namXuatBan: ""
+            },
+            trangThai: "In Stock"
+        };
+
+        $http.post('http://localhost:8080/createBook', JSON.stringify(bookData)).then(function(response)
+        {
+          if(response.data && !message)
           {
-            if(!message) alert("Thêm sách thất bại!!");
+            alert("Đã thêm " + soLuong + " sách!");
+            location.reload();
             message = true;
-          });
+          }
+        }, function(response)
+            {
+              if(!message) alert("Thêm sách thất bại!!");
+              message = true;
+            });
+      }
     }
   }
 
