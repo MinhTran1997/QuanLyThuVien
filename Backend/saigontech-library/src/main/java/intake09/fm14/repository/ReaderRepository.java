@@ -16,6 +16,6 @@ public interface ReaderRepository extends JpaRepository<Reader, Long> {
 			"				FULL JOIN Book s ON ctpm.id.barcode = s.barcode" + 
 			"				Full JOIN BookTitle ds ON ds.id_ISBN = s.bookTitle.id_ISBN" +
 			"				Full JOIN ReturnBooksDetail ctpt ON s.barcode = ctpt.id.barcode" + 
-			"				Full JOIN ReturnBooks pt ON ctpt.id.id_PhieuTra = pt.id_PhieuTra")
+			"				Full JOIN ReturnBooks pt ON ctpt.id.id_PhieuTra = pt.id_PhieuTra ORDER BY pm.ngayLapPM DESC")
 	List<Object> ThongKeDocGia(String username_DG);
 }
