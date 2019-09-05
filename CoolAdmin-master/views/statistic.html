@@ -8,10 +8,11 @@
     <div style="display: inline-block" class="col-sm-3">
         <label class="col-form-label">Đến ngày:</label>
         <input type="date" class="form-control" ng-model="todate" id="to">
+        <span id="invalidDate" style="font-size: 18px; color: red"></span>
     </div>
     <div style="display: inline-block" class="col-sm-3">
         <label class="col-form-label">Username:</label>
-        <input type="text" class="form-control" ng-model="username">
+        <input type="text" class="form-control" ng-model="username" ng-change="changeUserName()">
         <span id="invalid" style="font-size: 18px; color: red"></span>
     </div>
     <div style="display: inline-block" class="col-sm-3">
@@ -42,9 +43,9 @@
                 <td>{{x[2]}}</td>
                 <td>{{x[3]}}</td>
                 <td>{{x[4]}}</td>
-                <td>{{x[5]}}</td>
-                <td>{{x[6]}}</td>
-                <td>{{x[7]}}</td>
+                <td>{{x[5] | date:'dd-MM-yyyy'}}</td>
+                <td>{{x[6] | date:'dd-MM-yyyy'}}</td>
+                <td>{{x[7] | date:'dd-MM-yyyy'}}</td>
             </tr>
         </tbody>
     </table>
